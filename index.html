@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr" class="h-full">
 <head>
@@ -349,11 +350,11 @@
     const sound = new SoundEngine();
 
     const DEFAULT_SHORTCUTS = [
-      'help', 'help slots', 'help bj', 'proba', 'proba bj', 'profil', 'vip', 'slots 50', 'slots all', 'bj 100', 'roulette 50 rouge', 'crash 50', 'dés 50 sup 7', 'bonus', 'clear'
+      'help', 'help slots', 'help bj', 'help poker', 'proba', 'proba bj', 'proba poker', 'profil', 'vip', 'slots 50', 'slots all', 'bj 100', 'poker 100', 'roulette 50 rouge', 'crash 50', 'dés 50 sup 7', 'bonus', 'clear'
     ];
 
     const RESERVED_WORDS = [
-      'fruio_85', 'admin', 'root', 'help', 'aide', 'slots', 'slot', 'blackjack', 'bj', 'roulette', 'roul',
+      'fruio_85', 'admin', 'root', 'help', 'aide', 'slots', 'slot', 'blackjack', 'bj', 'poker', 'ultimate', 'uth', 'roulette', 'roul',
       'crash', 'fusee', 'dés', 'de', 'des', 'dé', 'dice', 'profil', 'compte', 'status', 'me', 'vip', 'grades', 'rangs',
       'solde', 'balance', 'cash', 'argent', 'stats', 'winrate', 'proba', 'probas', 'probabilites', 'cotes', 'odds',
       'bonus', 'daily', 'emprunt', 'pret', 'rembourser', 'pay', 'theme', 'skin', 'color', 'clear', 'cls',
@@ -392,6 +393,7 @@
         byGame: {
           slots: { played: 0, won: 0, lost: 0 },
           bj: { played: 0, won: 0, lost: 0, push: 0 },
+          poker: { played: 0, won: 0, lost: 0, push: 0, dealerQualified: 0, play4x: 0, play2x: 0, play1x: 0, bestHand: '—', biggestPayout: 0, totalCommitted: 0, totalReturned: 0 },
           roulette: { played: 0, won: 0, lost: 0 },
           crash: { played: 0, won: 0, lost: 0 },
           dés: { played: 0, won: 0, lost: 0 }
@@ -932,6 +934,7 @@
               byGame: {
                 slots: { played: 0, won: 0, lost: 0 },
                 bj: { played: 0, won: 0, lost: 0, push: 0 },
+                poker: { played: 0, won: 0, lost: 0, push: 0, dealerQualified: 0, play4x: 0, play2x: 0, play1x: 0, bestHand: '—', biggestPayout: 0, totalCommitted: 0, totalReturned: 0 },
                 roulette: { played: 0, won: 0, lost: 0 },
                 crash: { played: 0, won: 0, lost: 0 },
                 dés: { played: 0, won: 0, lost: 0 }
@@ -978,6 +981,7 @@
           byGame: {
             slots: { played: 0, won: 0, lost: 0 },
             bj: { played: 0, won: 0, lost: 0, push: 0 },
+            poker: { played: 0, won: 0, lost: 0, push: 0, dealerQualified: 0, play4x: 0, play2x: 0, play1x: 0, bestHand: '—', biggestPayout: 0, totalCommitted: 0, totalReturned: 0 },
             roulette: { played: 0, won: 0, lost: 0 },
             crash: { played: 0, won: 0, lost: 0 },
             dés: { played: 0, won: 0, lost: 0 },
@@ -1046,6 +1050,10 @@
       <span class="text-white">Blackjack: <b class="text-emerald-400">4.83%</b> | Paire (Split): <b class="text-yellow-400">5.88% (1/17)</b> | Victoire: <b class="text-emerald-400">42.2%</b></span>
     </div>
     <div class="p-1.5 rounded border border-[var(--term-border)] bg-black/40 flex justify-between items-center">
+      <span>🃏 <span class="text-yellow-300 font-bold">ULTIMATE POKER</span> (Joueur vs Croupier) :</span>
+      <span class="text-white">Main servie: <b class="text-emerald-400">Paire ou mieux 42.26%</b> | Quinte flush royale: <b class="text-yellow-400">0.000154%</b></span>
+    </div>
+    <div class="p-1.5 rounded border border-[var(--term-border)] bg-black/40 flex justify-between items-center">
       <span>🎡 <span class="text-yellow-300 font-bold">ROULETTE</span> (Européenne 37N) :</span>
       <span class="text-white">Plein: <b class="text-yellow-400">2.70%</b> (x36) | Couleur/Parité: <b class="text-emerald-400">48.65%</b> (x2)</span>
     </div>
@@ -1060,7 +1068,7 @@
   </div>
 
   <div class="border-t border-[var(--term-border)] pt-1.5 text-[11px] text-[var(--term-accent)]">
-    💡 Tapez <span class="text-yellow-300 font-bold">proba &lt;jeu&gt;</span> (ex: <span class="text-white">proba bj</span>, <span class="text-white">proba slots</span>, <span class="text-white">proba roulette</span>, <span class="text-white">proba crash</span>, <span class="text-white">proba dés</span>) pour la table détaillée.
+    💡 Tapez <span class="text-yellow-300 font-bold">proba &lt;jeu&gt;</span> (ex: <span class="text-white">proba poker</span>, <span class="text-white">proba bj</span>) pour la table détaillée.
   </div>
 </div>`;
         printRaw(html);
@@ -1150,6 +1158,28 @@
         return;
       }
 
+      if (target === 'poker' || target === 'ultimate' || target === 'uth') {
+        printRaw(`
+<div class="my-1 p-2 sm:p-3 border-l-2 border-yellow-400 bg-black/50 rounded space-y-1.5 text-xs font-mono">
+  <div class="text-yellow-300 font-bold text-sm">🃏 PROBABILITÉS DÉTAILLÉES // ULTIMATE TEXAS HOLD'EM</div>
+  <div>Probabilités d'obtenir chaque meilleure main avec 7 cartes (Texas Hold'em) :</div>
+  <div class="space-y-1 text-[11px]">
+    <div class="flex justify-between"><span>Quinte flush royale</span><span class="text-yellow-300 font-bold">0.000154% (1 / 649 740)</span></div>
+    <div class="flex justify-between"><span>Quinte flush (hors royale)</span><span>0.00139% (1 / 72 193)</span></div>
+    <div class="flex justify-between"><span>Carré</span><span>0.0240% (1 / 4 165)</span></div>
+    <div class="flex justify-between"><span>Full</span><span>0.1441% (1 / 694)</span></div>
+    <div class="flex justify-between"><span>Couleur</span><span>0.1965% (1 / 509)</span></div>
+    <div class="flex justify-between"><span>Quinte</span><span>0.3925% (1 / 255)</span></div>
+    <div class="flex justify-between"><span>Brelan</span><span>2.1128% (1 / 47.3)</span></div>
+    <div class="flex justify-between"><span>Deux paires</span><span>4.7539% (1 / 21.0)</span></div>
+    <div class="flex justify-between"><span>Paire</span><span>42.2569% (1 / 2.37)</span></div>
+    <div class="flex justify-between"><span>Carte haute</span><span>50.1177% (1 / 2.00)</span></div>
+  </div>
+  <div class="border-t border-[var(--term-border)] pt-1 text-[11px] text-gray-300">Le croupier doit avoir au moins une paire pour qualifier. Les probabilités décrivent la distribution des mains, pas la chance de gagner contre une main adverse.</div>
+</div>`);
+        return;
+      }
+
       if (target === 'roulette' || target === 'roul') {
         const html = `
 <div class="my-1 p-2 sm:p-3 border-l-2 border-yellow-400 bg-black/50 rounded space-y-1.5 text-xs font-mono">
@@ -1225,7 +1255,7 @@
         return;
       }
 
-      print(`Jeu inconnu pour les probabilités. Essayez : <span class="text-yellow-300 font-bold">proba bj</span>, <span class="text-yellow-300 font-bold">proba slots</span>, <span class="text-yellow-300 font-bold">proba roulette</span>, <span class="text-yellow-300 font-bold">proba crash</span> ou <span class="text-yellow-300 font-bold">proba dés</span>.`, 'warn');
+      print(`Jeu inconnu pour les probabilités. Essayez : <span class="text-yellow-300 font-bold">proba poker</span>, <span class="text-yellow-300 font-bold">proba bj</span>, <span class="text-yellow-300 font-bold">proba slots</span>, <span class="text-yellow-300 font-bold">proba roulette</span>, <span class="text-yellow-300 font-bold">proba crash</span> ou <span class="text-yellow-300 font-bold">proba dés</span>.`, 'warn');
     }
 
     function showHelp(arg) {
@@ -1236,6 +1266,7 @@
 <div class="space-y-1 font-mono text-xs sm:text-sm">
   <div class="text-[var(--term-accent)] font-bold mb-1">=== CATALOGUE DES COMMANDES VEGAS-OS ===</div>
   <div><span class="font-bold text-yellow-300">blackjack &lt;mise|all&gt;</span>     : Blackjack interactif avec Split (alias: <span class="text-white font-semibold">bj</span>)</div>
+  <div><span class="font-bold text-yellow-300">poker &lt;mise|all&gt;</span>         : Ultimate Texas Hold'em contre le croupier (alias: <span class="text-white font-semibold">ultimate, uth</span>)</div>
   <div><span class="font-bold text-yellow-300">slots &lt;mise|all&gt;</span>         : Machine à sous 3 rouleaux (alias: <span class="text-white font-semibold">slot</span>)</div>
   <div><span class="font-bold text-yellow-300">roulette &lt;mise|all&gt; &lt;pari&gt;</span>: Roulette européenne (alias: <span class="text-white font-semibold">roul</span>)</div>
   <div><span class="font-bold text-yellow-300">crash &lt;mise|all&gt;</span>         : Multiplicateur fusée exponentiel (alias: <span class="text-white font-semibold">fusee</span>)</div>
@@ -1246,7 +1277,7 @@
   <div><span class="font-bold text-cyan-300">profil / compte</span>        : Vue globale (solde, dettes, VIP, série 🔥 & statistiques)</div>
   <div><span class="font-bold text-cyan-300">vip / grades</span>           : Guide des paliers et avantages du statut VIP</div>
   <div><span class="font-bold text-cyan-300">solde / balance</span>        : Consulter vos jetons et dettes actuelles</div>
-  <div><span class="font-bold text-cyan-300">stats</span>                   : Taux de victoires individuel par jeu</div>
+  <div><span class="font-bold text-cyan-300">stats [poker]</span>           : Taux de victoires par jeu, détail UTH avec <span class="text-white">stats poker</span></div>
   <div><span class="font-bold text-cyan-300">bonus</span>                   : Réclamer l'aide cartel selon votre rang VIP (cooldown 3min)</div>
   <div><span class="font-bold text-cyan-300">emprunt &lt;montant&gt;</span>        : Emprunter au cartel (max 5000$, intérêt 30%)</div>
   <div><span class="font-bold text-cyan-300">rembourser [montant|all]</span> : Rembourser votre dette</div>
@@ -1287,6 +1318,21 @@
     <div>• <span class="text-cyan-300 font-semibold">Déroulement :</span> Vos 2 cartes sont séparées en Main 1 et Main 2 avec une mise identique sur chacune. Une seconde carte est donnée à chaque main. Vous jouez d'abord la Main 1 (hit/stand), puis la Main 2. Si au moins 1 main n'est pas bust, le croupier joue normalement.</div>
     <div>• <span class="text-orange-400 font-semibold">🔥 Gestion de la Série :</span> Les 2 mains du split comptent comme <b class="text-white">une seule partie</b> pour la série de flammes (victoire globale = +1 flamme, nul/mixte = série préservée, défaite = série brisée).</div>
   </div>
+</div>`);
+        return;
+      }
+
+      if (target === 'poker' || target === 'ultimate' || target === 'uth') {
+        printRaw(`
+<div class="space-y-1 text-xs sm:text-sm border-l-2 border-yellow-400 pl-3 my-1">
+  <div class="text-yellow-300 font-bold text-sm">🃏 ULTIMATE TEXAS HOLD'EM // JOUEUR CONTRE CROUPIER</div>
+  <div><span class="text-cyan-300 font-semibold">Alias :</span> poker, ultimate, uth</div>
+  <div><span class="text-cyan-300 font-semibold">Syntaxe :</span> <span class="text-white">poker &lt;mise|all&gt;</span> (ex: <span class="text-yellow-300">poker 50</span>)</div>
+  <div class="text-[var(--term-accent)] font-semibold mt-2">--- MISES & DÉROULEMENT ---</div>
+  <div class="pl-2 space-y-0.5"><div>• Votre mise initiale place automatiquement <b>Ante + Blind</b>, de même montant. Une commande <span class="text-yellow-300 font-bold">poker 50</span> engage donc 100 $.</div><div>• Après vos 2 cartes : <span class="text-yellow-300 font-bold">play 4</span> (mise Play x4) ou <span class="text-yellow-300 font-bold">check</span>.</div><div>• Après le flop : <span class="text-yellow-300 font-bold">play 2</span> (mise Play x2) ou <span class="text-yellow-300 font-bold">check</span>.</div><div>• Après turn + river : vous devez jouer <span class="text-yellow-300 font-bold">play</span> (mise Play x1) pour aller à l'abattage.</div></div>
+  <div class="text-[var(--term-accent)] font-semibold mt-2">--- ABATTAGE ---</div>
+  <div class="pl-2 space-y-0.5"><div>• La meilleure main de 5 cartes parmi 7 gagne. Le croupier qualifie avec <b>une paire ou mieux</b>.</div><div>• Si vous gagnez : Play paie 1:1; Ante paie 1:1 si le croupier qualifie, sinon l'Ante est rendu.</div><div>• Blind : quinte x1, couleur x1.5, full x3, carré x10, quinte flush x50, royale x500; avec une main inférieure à une quinte, la Blind est rendue.</div><div>• Égalité : toutes les mises sont rendues. En cas de défaite, Ante, Blind et Play sont perdues.</div></div>
+  <div class="text-gray-300 pt-1">Le croupier annonce toujours les choix autorisés. Consultez <span class="text-yellow-300 font-bold">proba poker</span> pour toutes les fréquences de mains.</div>
 </div>`);
         return;
       }
@@ -1347,7 +1393,7 @@
       }
 
       if (target === 'proba' || target === 'probas' || target === 'probabilites' || target === 'cotes' || target === 'odds') {
-        printRaw(`<div>Affiche les probabilités mathématiques de chaque jeu. Syntaxe : proba &lt;slots|bj|roulette|crash|dés&gt;.</div>`);
+        printRaw(`<div>Affiche les probabilités mathématiques de chaque jeu. Syntaxe : proba &lt;slots|bj|poker|roulette|crash|dés&gt;.</div>`);
         return;
       }
 
@@ -1359,7 +1405,7 @@
       const profitFormatted = netProfit >= 0 ? `+${netProfit.toLocaleString()} $` : `-${Math.abs(netProfit).toLocaleString()} $`;
       const profitClass = netProfit >= 0 ? 'text-emerald-400' : 'text-red-400';
       const winRateGlobal = STATE.stats.gamesPlayed > 0
-        ? Math.round(((STATE.stats.byGame.slots.won + STATE.stats.byGame.bj.won + STATE.stats.byGame.roulette.won + STATE.stats.byGame.crash.won + STATE.stats.byGame.dés.won) / STATE.stats.gamesPlayed) * 100)
+        ? Math.round(((STATE.stats.byGame.slots.won + STATE.stats.byGame.bj.won + STATE.stats.byGame.poker.won + STATE.stats.byGame.roulette.won + STATE.stats.byGame.crash.won + STATE.stats.byGame.dés.won) / STATE.stats.gamesPlayed) * 100)
         : 0;
 
       const profileHtml = `
@@ -1454,7 +1500,15 @@
       print(`Série active de flammes : <span class="text-orange-400 font-bold">🔥 ${STATE.streak || 0} (+${STATE.streak || 0}%)</span>`);
     }
 
-    function showStats() {
+    function showStats(target = '') {
+      if (['poker', 'ultimate', 'uth'].includes(target.toLowerCase())) {
+        const p = STATE.stats.byGame.poker;
+        const rate = p.played ? Math.round((p.won / p.played) * 100) : 0;
+        const qualificationRate = p.played ? Math.round((p.dealerQualified / p.played) * 100) : 0;
+        const net = (p.totalReturned || 0) - (p.totalCommitted || 0);
+        printRaw(`<div class="my-1 p-2 sm:p-3 border border-yellow-500/60 bg-black/40 rounded-lg space-y-2 text-xs"><div class="font-bold text-yellow-300 text-sm border-b border-[var(--term-border)] pb-1">🃏 STATISTIQUES ULTIMATE POKER</div><div class="grid grid-cols-2 sm:grid-cols-3 gap-1"><div>Parties : <b class="text-white">${p.played}</b></div><div>Victoires : <b class="text-emerald-400">${p.won}</b></div><div>Défaites : <b class="text-red-400">${p.lost}</b></div><div>Égalités : <b class="text-cyan-300">${p.push || 0}</b></div><div>Winrate : <b class="text-yellow-300">${rate}%</b></div><div>Croupier qualifié : <b>${p.dealerQualified || 0} (${qualificationRate}%)</b></div></div><div class="border-t border-[var(--term-border)] pt-1 grid grid-cols-1 sm:grid-cols-2 gap-1"><div>Décisions Play — x4: <b>${p.play4x || 0}</b> | x2: <b>${p.play2x || 0}</b> | x1: <b>${p.play1x || 0}</b></div><div>Meilleure main gagnante : <b class="text-yellow-300">${p.bestHand || '—'}</b></div><div>Mises engagées : <b>${(p.totalCommitted || 0).toLocaleString()} $</b></div><div>Retours encaissés : <b class="text-emerald-400">${(p.totalReturned || 0).toLocaleString()} $</b></div><div>Bilan Poker : <b class="${net >= 0 ? 'text-emerald-400' : 'text-red-400'}">${net >= 0 ? '+' : ''}${net.toLocaleString()} $</b></div><div>Plus gros crédit : <b class="text-yellow-300">${(p.biggestPayout || 0).toLocaleString()} $</b></div></div></div>`);
+        return;
+      }
       function calcRate(won, played) {
         if (!played || played === 0) return 0;
         return Math.round((won / played) * 100);
@@ -1469,11 +1523,12 @@
       const g = STATE.stats.byGame;
       const rateSlots = calcRate(g.slots.won, g.slots.played);
       const rateBj = calcRate(g.bj.won, g.bj.played);
+      const ratePoker = calcRate(g.poker.won, g.poker.played);
       const rateRoul = calcRate(g.roulette.won, g.roulette.played);
       const rateCrash = calcRate(g.crash.won, g.crash.played);
       const rateDes = calcRate(g.dés.won, g.dés.played);
 
-      const totalWonGames = g.slots.won + g.bj.won + g.roulette.won + g.crash.won + g.dés.won;
+      const totalWonGames = g.slots.won + g.bj.won + g.poker.won + g.roulette.won + g.crash.won + g.dés.won;
       const globalRate = STATE.stats.gamesPlayed > 0 ? Math.round((totalWonGames / STATE.stats.gamesPlayed) * 100) : 0;
 
       const html = `
@@ -1497,6 +1552,14 @@
       <span class="tracking-widest text-[var(--term-green)] px-2">${getBar(rateBj)}</span>
       <span class="opacity-60 text-[11px]">(${g.bj.won}W / ${g.bj.lost}L - ${g.bj.played}p)</span>
     </div>
+
+    <div class="flex items-center justify-between">
+      <span class="w-28 text-[var(--term-accent)]">🃏 Poker:</span>
+      <span class="text-yellow-300 font-bold w-12 text-right">${ratePoker}%</span>
+      <span class="tracking-widest text-[var(--term-green)] px-2">${getBar(ratePoker)}</span>
+      <span class="opacity-60 text-[11px]">(${g.poker.won}W / ${g.poker.lost}L / ${g.poker.push || 0}N - ${g.poker.played}p)</span>
+    </div>
+    <div class="ml-28 text-[11px] opacity-70">Croupier qualifié : ${g.poker.dealerQualified || 0} | Play x4/x2/x1 : ${g.poker.play4x || 0}/${g.poker.play2x || 0}/${g.poker.play1x || 0} | Meilleure main : ${g.poker.bestHand || '—'} | Plus gros crédit : ${(g.poker.biggestPayout || 0).toLocaleString()} $</div>
 
     <div class="flex items-center justify-between">
       <span class="w-28 text-[var(--term-accent)]">🎡 Roulette:</span>
@@ -2035,6 +2098,121 @@
       promptLabel.textContent = STATE.isAdmin ? `[ADMIN-ROOT] ${STATE.currentUser}@vegas:~#` : `${STATE.currentUser}@vegas:~$`;
     }
 
+    function createPokerDeck() {
+      const deck = [];
+      ['♠', '♥', '♦', '♣'].forEach(suit => {
+        ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'].forEach(val => deck.push({ suit, val }));
+      });
+      return deck;
+    }
+
+    function pokerCardText(cards) {
+      return cards.map(c => `[ ${c.val}${c.suit} ]`).join(' ');
+    }
+
+    function evaluatePokerHand(cards) {
+      const values = { '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, J: 11, Q: 12, K: 13, A: 14 };
+      const names = ['Carte haute', 'Paire', 'Deux paires', 'Brelan', 'Quinte', 'Couleur', 'Full', 'Carré', 'Quinte flush', 'Quinte flush royale'];
+      function scoreFive(hand) {
+        const ranks = hand.map(c => values[c.val]).sort((a, b) => b - a);
+        const counts = {};
+        ranks.forEach(r => counts[r] = (counts[r] || 0) + 1);
+        const groups = Object.entries(counts).map(([r, n]) => ({ r: Number(r), n })).sort((a, b) => b.n - a.n || b.r - a.r);
+        const flush = hand.every(c => c.suit === hand[0].suit);
+        const unique = [...new Set(ranks)].sort((a, b) => b - a);
+        const straightHigh = unique.length === 5 && (unique[0] - unique[4] === 4 ? unique[0] : (unique.join(',') === '14,5,4,3,2' ? 5 : 0));
+        if (flush && straightHigh) return [straightHigh === 14 ? 9 : 8, straightHigh];
+        if (groups[0].n === 4) return [7, groups[0].r, groups[1].r];
+        if (groups[0].n === 3 && groups[1].n === 2) return [6, groups[0].r, groups[1].r];
+        if (flush) return [5, ...ranks];
+        if (straightHigh) return [4, straightHigh];
+        if (groups[0].n === 3) return [3, groups[0].r, ...groups.slice(1).map(x => x.r)];
+        if (groups[0].n === 2 && groups[1].n === 2) return [2, groups[0].r, groups[1].r, groups[2].r];
+        if (groups[0].n === 2) return [1, groups[0].r, ...groups.slice(1).map(x => x.r)];
+        return [0, ...ranks];
+      }
+      let best = null;
+      for (let a = 0; a < cards.length - 4; a++) for (let b = a + 1; b < cards.length - 3; b++) for (let c = b + 1; c < cards.length - 2; c++) for (let d = c + 1; d < cards.length - 1; d++) for (let e = d + 1; e < cards.length; e++) {
+        const hand = [cards[a], cards[b], cards[c], cards[d], cards[e]];
+        const score = scoreFive(hand);
+        if (!best || score.some((v, i) => v !== best.score[i] && score.slice(0, i).every((x, j) => x === best.score[j]) && v > best.score[i])) best = { score, hand };
+      }
+      return { rank: best.score[0], score: best.score, name: names[best.score[0]], cards: best.hand };
+    }
+
+    function comparePokerHands(a, b) {
+      for (let i = 0; i < Math.max(a.score.length, b.score.length); i++) {
+        if ((a.score[i] || 0) !== (b.score[i] || 0)) return (a.score[i] || 0) > (b.score[i] || 0) ? 1 : -1;
+      }
+      return 0;
+    }
+
+    function playPoker(betInput) {
+      const parsed = parseBet(betInput);
+      if (!parsed) { print(`Syntaxe : poker &lt;mise|all&gt; (ex: 'poker 50'). La mise représente l'Ante et la Blind, donc 50 = 100 $ engagés.`, 'error'); return; }
+      // "all" reserves a complete preflop x4 decision: Ante + Blind + Play x4 = 6 unités.
+      const ante = parsed.isAllIn ? Math.floor(STATE.balance / 6) : parsed.amount;
+      if (ante <= 0) { print(`Solde insuffisant pour placer l'Ante et la Blind.`, 'error'); return; }
+      const initial = { ...parsed, amount: ante * 2, isAllIn: ante * 2 === STATE.balance };
+      if (!checkAndDeductBet(initial, "l'Ultimate Poker (Ante + Blind)")) return;
+      const deck = createPokerDeck();
+      const draw = () => deck.splice(Math.floor(Math.random() * deck.length), 1)[0];
+      const player = [draw(), draw()], dealer = [draw(), draw()], board = [draw(), draw(), draw(), draw(), draw()];
+      STATE.stats.gamesPlayed++; STATE.stats.byGame.poker.played++; STATE.stats.byGame.poker.totalCommitted = (STATE.stats.byGame.poker.totalCommitted || 0) + initial.amount;
+      STATE.activeGame = 'poker';
+      STATE.gameData = { ante, blind: ante, play: 0, player, dealer, board, phase: 'preflop' };
+      promptLabel.textContent = 'poker-table:~$';
+      printRaw(`<div class="my-2 p-3 border-2 border-yellow-500/60 bg-black/60 rounded space-y-1 text-xs sm:text-sm"><div class="text-yellow-300 font-bold">🃏 ULTIMATE TEXAS HOLD'EM — ANTE ${ante.toLocaleString()} $ + BLIND ${ante.toLocaleString()} $</div><div>Croupier : <span class="text-gray-400">[ ? ? ] [ ? ? ]</span></div><div>Vous      : <span class="text-white font-bold">${pokerCardText(player)}</span></div><div>Table     : <span class="text-gray-400">[ ? ] [ ? ] [ ? ] [ ? ] [ ? ]</span></div></div>`);
+      print(`Décision préflop : tapez <span class="text-yellow-300 font-bold">play 4</span> pour engager ${ (ante * 4).toLocaleString() } $ ou <span class="text-cyan-300 font-bold">check</span> pour voir le flop gratuitement.`, 'warn');
+    }
+
+    function pokerPlay(multiplier) {
+      const g = STATE.gameData, extra = g.ante * multiplier;
+      if (STATE.balance < extra) { print(`Fonds insuffisants : il faut ${extra.toLocaleString()} $ pour cette mise Play x${multiplier}.`, 'error'); return; }
+      STATE.balance -= extra; STATE.stats.totalBets += extra; STATE.stats.byGame.poker.totalCommitted = (STATE.stats.byGame.poker.totalCommitted || 0) + extra; g.play = extra;
+      STATE.stats.byGame.poker[`play${multiplier}x`]++; saveState();
+      if (g.phase === 'preflop') { g.phase = 'showdown'; print(`Play x4 placé. Le croupier révèle les cinq cartes communes...`); }
+      else if (g.phase === 'flop') { g.phase = 'showdown'; print(`Play x2 placé. Le croupier révèle turn et river...`); }
+      else { g.phase = 'showdown'; print(`Play x1 placé. Abattage...`); }
+      resolvePoker();
+    }
+
+    function handlePokerInput(input) {
+      const g = STATE.gameData, cmd = input.trim().toLowerCase().replace(/\s+/g, ' ');
+      if (g.phase === 'preflop') {
+        if (cmd === 'play 4' || cmd === 'play4' || cmd === '4') return pokerPlay(4);
+        if (cmd === 'check' || cmd === 'c') { g.phase = 'flop'; printRaw(`<div class="text-xs my-1">Flop : <span class="text-white font-bold">${pokerCardText(g.board.slice(0, 3))}</span> &nbsp; | &nbsp; Croupier : [ ? ? ] [ ? ? ]</div>`); print(`Décision au flop : tapez <span class="text-yellow-300 font-bold">play 2</span> pour engager ${(g.ante * 2).toLocaleString()} $ ou <span class="text-cyan-300 font-bold">check</span> pour voir turn + river.`, 'warn'); return; }
+        print(`Choix autorisés : <span class="text-yellow-300 font-bold">play 4</span> ou <span class="text-cyan-300 font-bold">check</span>.`, 'warn'); return;
+      }
+      if (g.phase === 'flop') {
+        if (cmd === 'play 2' || cmd === 'play2' || cmd === '2') return pokerPlay(2);
+        if (cmd === 'check' || cmd === 'c') { g.phase = 'river'; printRaw(`<div class="text-xs my-1">Turn + River : <span class="text-white font-bold">${pokerCardText(g.board)}</span></div>`); print(`Dernière décision obligatoire : tapez <span class="text-yellow-300 font-bold">play</span> pour engager ${g.ante.toLocaleString()} $ et aller à l'abattage.`, 'warn'); return; }
+        print(`Choix autorisés : <span class="text-yellow-300 font-bold">play 2</span> ou <span class="text-cyan-300 font-bold">check</span>.`, 'warn'); return;
+      }
+      if (g.phase === 'river') { if (cmd === 'play' || cmd === 'play 1' || cmd === '1') return pokerPlay(1); print(`Le dernier Play est obligatoire : tapez <span class="text-yellow-300 font-bold">play</span>.`, 'warn'); }
+    }
+
+    function resolvePoker() {
+      const g = STATE.gameData, p = evaluatePokerHand([...g.player, ...g.board]), d = evaluatePokerHand([...g.dealer, ...g.board]);
+      const comparison = comparePokerHands(p, d), qualified = d.rank >= 1;
+      if (qualified) STATE.stats.byGame.poker.dealerQualified++;
+      const blindMult = [0, 0, 0, 0, 1, 1.5, 3, 10, 50, 500][p.rank] || 0;
+      const committed = g.ante + g.blind + g.play;
+      printRaw(`<div class="my-2 p-3 border border-[var(--term-border)] bg-black/60 rounded text-xs sm:text-sm space-y-1"><div class="text-yellow-300 font-bold">=== ABATTAGE ===</div><div>Table : ${pokerCardText(g.board)}</div><div>Vous : ${pokerCardText(g.player)} → <b class="text-emerald-400">${p.name}</b> (${pokerCardText(p.cards)})</div><div>Croupier : ${pokerCardText(g.dealer)} → <b class="text-cyan-300">${d.name}</b> (${pokerCardText(d.cards)})</div><div>Croupier ${qualified ? '<span class="text-emerald-400 font-bold">QUALIFIÉ</span>' : '<span class="text-yellow-300 font-bold">NE QUALIFIE PAS (Ante rendue)</span>'}</div></div>`);
+      if (comparison > 0) {
+        const payout = g.play * 2 + (qualified ? g.ante * 2 : g.ante) + g.blind * (1 + blindMult);
+        STATE.stats.byGame.poker.won++; STATE.stats.byGame.poker.bestHand = p.name; STATE.stats.byGame.poker.biggestPayout = Math.max(STATE.stats.byGame.poker.biggestPayout || 0, payout);
+        STATE.stats.byGame.poker.totalReturned = (STATE.stats.byGame.poker.totalReturned || 0) + payout;
+        const { totalWin, bonusPct, bonusMoney } = applyWinStreak(payout, 'poker');
+        print(`🏆 VICTOIRE ! Play x2, ${qualified ? 'Ante x2' : 'Ante rendue'}${blindMult ? `, Blind x${1 + blindMult}` : ', Blind rendue'}. Crédit : +${totalWin.toLocaleString()} $${bonusMoney ? ` (🔥 +${bonusPct}%)` : ''}.`, 'win'); sound.bigWin();
+      } else if (comparison === 0) {
+        STATE.balance += committed; STATE.stats.byGame.poker.push++; STATE.stats.byGame.poker.totalReturned = (STATE.stats.byGame.poker.totalReturned || 0) + committed; print(`🤝 ÉGALITÉ : Ante, Blind et Play sont rendues (+${committed.toLocaleString()} $). Série préservée.`, 'warn'); sound.win();
+      } else {
+        STATE.stats.byGame.poker.lost++; applyLossStreak(committed, 'poker'); print(`💀 DÉFAITE : le croupier remporte l'abattage (-${committed.toLocaleString()} $).`, 'dim'); sound.lose();
+      }
+      saveState(); STATE.activeGame = null; STATE.gameData = {}; promptLabel.textContent = STATE.isAdmin ? `[ADMIN-ROOT] ${STATE.currentUser}@vegas:~#` : `${STATE.currentUser}@vegas:~$`;
+    }
+
     function playRoulette(arg1, arg2) {
       if (!arg1 || !arg2) {
         print(`Syntaxe : roulette &lt;mise|all&gt; &lt;pari&gt; (ex: 'roulette 50 rouge', 'roulette 100 17', 'roulette all noir')`, 'error');
@@ -2427,6 +2605,10 @@
         handleBlackjackInput(trimmed);
         return;
       }
+      if (STATE.activeGame === 'poker') {
+        handlePokerInput(trimmed);
+        return;
+      }
       if (STATE.activeGame === 'crash') {
         handleCrashInput(trimmed);
         return;
@@ -2465,6 +2647,8 @@
         playSlots(args[0]);
       } else if (cmd === 'blackjack' || cmd === 'bj') {
         playBlackjack(args[0]);
+      } else if (cmd === 'poker' || cmd === 'ultimate' || cmd === 'uth') {
+        playPoker(args[0]);
       } else if (cmd === 'roulette' || cmd === 'roul') {
         playRoulette(args[0], args[1]);
       } else if (cmd === 'crash' || cmd === 'fusee') {
@@ -2478,7 +2662,7 @@
       } else if (cmd === 'solde' || cmd === 'balance' || cmd === 'cash' || cmd === 'argent') {
         showBalance();
       } else if (cmd === 'stats' || cmd === 'statistiques' || cmd === 'winrate') {
-        showStats();
+        showStats(args[0]);
       } else if (cmd === 'bonus' || cmd === 'daily' || cmd === 'faucet') {
         claimBonus();
       } else if (cmd === 'emprunt' || cmd === 'pret' || cmd === 'loan') {
@@ -2568,14 +2752,14 @@
         e.preventDefault();
         const cur = termInput.value.trim().toLowerCase();
         const baseCommands = [
-          'help', 'help slots', 'help blackjack', 'help bj', 'help roulette', 'help crash', 'help dés',
+          'help', 'help slots', 'help blackjack', 'help bj', 'help poker', 'help roulette', 'help crash', 'help dés',
           'help profil', 'help vip', 'help solde', 'help stats', 'help proba', 'help bonus', 'help emprunt', 'help rembourser', 'help theme', 'help clear',
-          'proba', 'proba slots', 'proba bj', 'proba roulette', 'proba crash', 'proba dés',
-          'profil', 'vip', 'solde', 'stats',
+          'proba', 'proba slots', 'proba bj', 'proba poker', 'proba roulette', 'proba crash', 'proba dés',
+          'profil', 'vip', 'solde', 'stats', 'stats poker',
           'bonus', 'emprunt', 'rembourser', 'theme', 'theme buy crimson', 'theme buy cyberpunk', 'theme buy amber', 'clear',
-          'blackjack', 'bj', 'slots', 'slot', 'roulette', 'roul', 'crash', 'fusee', 'dés', 'des', 'dé', 'de', 'dice',
+          'blackjack', 'bj', 'poker', 'ultimate', 'uth', 'slots', 'slot', 'roulette', 'roul', 'crash', 'fusee', 'dés', 'des', 'dé', 'de', 'dice',
           'slots all', 'bj all', 'crash all', 'roulette all rouge', 'roulette all noir', 'rembourser all', 'logout', 'deconnexion',
-          'hit', 'stand', 'double', 'split'
+          'hit', 'stand', 'double', 'split', 'play 4', 'play 2', 'play', 'check'
         ];
         if (STATE.isAdmin) {
           baseCommands.push('give', 'help give', 'unroot', 'demote', 'help unroot');
