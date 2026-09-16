@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=VT323&display=swap" rel="stylesheet">
-  
+
   <style>
     :root {
       --term-bg: #020803;
@@ -127,9 +127,9 @@
 </head>
 
 <body class="h-full bg-black text-gray-200 overflow-hidden flex flex-col theme-matrix select-none">
-  
+
   <div class="relative flex-1 flex flex-col w-full h-full overflow-hidden crt-overlay bg-[var(--term-bg)] border-2 sm:border-4 border-[var(--term-border)] m-0 sm:m-1 sm:rounded-xl term-glow">
-    
+
     <!-- Top System HUD -->
     <header class="relative z-50 flex flex-wrap items-center justify-between px-3 py-2 border-b border-[var(--term-border)] bg-black/70 text-xs term-text backdrop-blur-sm gap-2">
       <div class="flex items-center gap-2 sm:gap-3">
@@ -209,10 +209,10 @@
             <!-- Dynamically populated pills -->
           </div>
           <div class="flex gap-2 pt-1">
-            <input 
-              id="input-new-shortcut" 
-              type="text" 
-              placeholder="Ex: slots 100, proba, profil, bj 50..." 
+            <input
+              id="input-new-shortcut"
+              type="text"
+              placeholder="Ex: slots 100, proba, profil, bj 50..."
               class="flex-1 bg-black/70 border border-[var(--term-border)] rounded px-2.5 py-1 text-xs text-white placeholder-[var(--term-dim)] outline-none focus:border-[var(--term-green)]"
             />
             <button id="btn-add-shortcut" class="px-3 py-1 rounded bg-[var(--term-border)] hover:bg-[var(--term-green)] hover:text-black text-xs font-bold transition">
@@ -231,14 +231,14 @@
     <!-- Terminal Command Input Line -->
     <footer id="term-footer" class="relative z-50 p-2 sm:p-3 border-t border-[var(--term-border)] bg-black/80 flex items-center gap-2 term-text">
       <span id="prompt-label" class="font-bold text-[var(--term-green)] select-none shrink-0 text-xs sm:text-sm">auth@vegas:~$</span>
-      <input 
-        id="term-input" 
-        type="text" 
-        autocomplete="off" 
-        autocorrect="off" 
-        autocapitalize="off" 
-        spellcheck="false" 
-        placeholder="Entrez votre nom d'utilisateur..." 
+      <input
+        id="term-input"
+        type="text"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder="Entrez votre nom d'utilisateur..."
         class="flex-1 bg-transparent border-none outline-none text-white font-mono text-xs sm:text-sm caret-[var(--term-green)] placeholder-[var(--term-dim)]"
       />
       <button id="btn-submit" class="px-3 py-1 rounded bg-[var(--term-border)]/70 hover:bg-[var(--term-green)] hover:text-black font-bold text-xs transition">
@@ -355,7 +355,7 @@
       'fruio_85', 'admin', 'root', 'help', 'aide', 'slots', 'slot', 'blackjack', 'bj', 'roulette', 'roul',
       'crash', 'fusee', 'dés', 'de', 'des', 'dé', 'dice', 'profil', 'compte', 'status', 'me', 'vip', 'grades', 'rangs',
       'solde', 'balance', 'cash', 'argent', 'stats', 'winrate', 'proba', 'probas', 'probabilites', 'cotes', 'odds',
-      'bonus', 'daily', 'emprunt', 'pret', 'rembourser', 'pay', 'theme', 'skin', 'color', 'clear', 'cls', 
+      'bonus', 'daily', 'emprunt', 'pret', 'rembourser', 'pay', 'theme', 'skin', 'color', 'clear', 'cls',
       'give', 'unroot', 'demote', 'exitroot', 'settings', 'config', 'logout', 'deconnexion', 'hit', 'stand', 'double', 'split'
     ];
 
@@ -588,7 +588,7 @@
 
     function applyWinStreak(baseWin, gameName) {
       STATE.consecutiveWins = (STATE.consecutiveWins || 0) + 1;
-      
+
       if (STATE.consecutiveWins >= 2) {
         STATE.streak = STATE.consecutiveWins - 1;
       } else {
@@ -598,7 +598,7 @@
       if (STATE.streak > (STATE.maxStreak || 0)) {
         STATE.maxStreak = STATE.streak;
       }
-      
+
       const bonusPct = STATE.streak;
       const bonusMoney = bonusPct > 0 ? Math.floor(baseWin * (bonusPct / 100)) : 0;
       const totalWin = baseWin + bonusMoney;
@@ -625,7 +625,7 @@
     function renderQuickBar() {
       if (!quickBar) return;
       quickBar.innerHTML = '<span class="opacity-60 text-[10px] uppercase font-bold pl-1 shrink-0">Raccourcis:</span>';
-      
+
       STATE.shortcuts.forEach(cmd => {
         const btn = document.createElement('button');
         btn.className = 'quick-btn shrink-0 px-2 py-1 rounded bg-[var(--term-border)]/40 border border-[var(--term-border)] hover:bg-[var(--term-dim)]/50 transition';
@@ -649,7 +649,7 @@
       const modalTitle = document.getElementById('settings-modal-title');
 
       if (modalTitle) {
-        modalTitle.innerHTML = isGuest 
+        modalTitle.innerHTML = isGuest
           ? '<span>⚙️</span><span>CONFIG // PARAMÈTRES (MODE LITE)</span>'
           : '<span>⚙️</span><span>CONFIG // PARAMÈTRES DU SYSTÈME</span>';
       }
@@ -684,11 +684,11 @@
 
         const btn = document.createElement('div');
         btn.className = `py-2 px-2.5 rounded border text-xs font-semibold flex items-center justify-between gap-2 transition ${
-          isCurrent 
-            ? 'border-yellow-400 bg-yellow-950/40 text-yellow-300 font-bold' 
+          isCurrent
+            ? 'border-yellow-400 bg-yellow-950/40 text-yellow-300 font-bold'
             : 'border-[var(--term-border)] bg-black/40 text-white'
         }`;
-        
+
         let priceSubtitle = '';
         if (isGold) {
           priceSubtitle = (STATE.isAdmin || STATE.balance >= 25000)
@@ -965,7 +965,7 @@
       STATE.purchasedThemes = Array.isArray(account.purchasedThemes) ? account.purchasedThemes : ['theme-matrix'];
       STATE.currentTheme = account.currentTheme || 'theme-matrix';
       STATE.shortcuts = Array.isArray(account.shortcuts) && account.shortcuts.length > 0 ? account.shortcuts : [...DEFAULT_SHORTCUTS];
-      
+
       if (typeof account.soundEnabled === 'boolean') {
         sound.enabled = account.soundEnabled;
       }
@@ -987,7 +987,7 @@
 
       termInput.type = 'text';
       termInput.placeholder = "Tapez 'help', 'proba', 'slots 50', 'bj all', 'roulette all rouge'...";
-      
+
       if (STATE.isAdmin) {
         promptLabel.textContent = `[ADMIN-ROOT] ${username}@vegas:~#`;
         promptLabel.className = 'font-bold text-yellow-300 select-none shrink-0 text-xs sm:text-sm animate-pulse';
@@ -1005,7 +1005,7 @@
       } else {
         print(`👋 BON RETOUR, ${username.toUpperCase()} ! Données de session synchronisées.`, 'win');
       }
-      
+
       print(`Tapez <span class="text-yellow-300 font-bold underline">help</span> pour le catalogue, <span class="text-yellow-300 font-bold underline">proba</span> pour les cotes ou <span class="text-yellow-300 font-bold underline">help &lt;jeu&gt;</span> pour les règles.`);
       print(`Tapez <span class="text-yellow-300 font-bold underline">logout</span> ou <span class="text-yellow-300 font-bold underline">deconnexion</span> pour changer d'utilisateur.`, 'dim');
       sound.win();
@@ -1034,7 +1034,7 @@
   <div class="text-gray-300 text-[11px]">
     Voici un aperçu des espérances mathématiques et des chances par jeu :
   </div>
-  
+
   <div class="space-y-1.5 font-mono text-[11px] sm:text-xs">
     <div class="p-1.5 rounded border border-[var(--term-border)] bg-black/40 flex justify-between items-center">
       <span>🎰 <span class="text-yellow-300 font-bold">SLOTS</span> (Machine à sous) :</span>
@@ -1102,7 +1102,7 @@
 <div class="my-1 p-2 sm:p-3 border-l-2 border-yellow-400 bg-black/50 rounded space-y-1.5 text-xs font-mono">
   <div class="text-yellow-300 font-bold text-sm">♠️ PROBABILITÉS DÉTAILLÉES // BLACKJACK & RÈGLE DU SPLIT</div>
   <div>Jeu basé sur un deck standard de 52 cartes (mélangé à chaque donne) :</div>
-  
+
   <div class="p-2 rounded border border-yellow-500/40 bg-yellow-950/20 space-y-1 text-[11px]">
     <div class="text-yellow-300 font-bold">--- PROBABILITÉS DE SPLIT (PAIRE OBLIGATOIRE) ---</div>
     <div class="flex justify-between">
@@ -1239,20 +1239,20 @@
   <div><span class="font-bold text-yellow-300">roulette &lt;mise|all&gt; &lt;pari&gt;</span>: Roulette européenne (alias: <span class="text-white font-semibold">roul</span>)</div>
   <div><span class="font-bold text-yellow-300">crash &lt;mise|all&gt;</span>         : Multiplicateur fusée exponentiel (alias: <span class="text-white font-semibold">fusee</span>)</div>
   <div><span class="font-bold text-yellow-300">dés &lt;mise|all&gt; &lt;sup|inf&gt; &lt;n&gt;</span>  : Somme de 2 dés 2-12 (alias: <span class="text-white font-semibold">dé, des, de, dice</span>)</div>
-  
+
   <div class="pt-2 text-[var(--term-accent)] font-bold">=== GESTION FINANCIÈRE & SYSTÈME ===</div>
   <div><span class="font-bold text-cyan-300">proba [jeu]</span>             : Afficher les probabilités et cotes (ex: proba bj)</div>
   <div><span class="font-bold text-cyan-300">profil / compte</span>        : Vue globale (solde, dettes, VIP, série 🔥 & statistiques)</div>
   <div><span class="font-bold text-cyan-300">vip / grades</span>           : Guide des paliers et avantages du statut VIP</div>
   <div><span class="font-bold text-cyan-300">solde / balance</span>        : Consulter vos jetons et dettes actuelles</div>
   <div><span class="font-bold text-cyan-300">stats</span>                   : Taux de victoires individuel par jeu</div>
-  <div><span class="font-bold text-cyan-300">bonus</span>                   : Réclamer 250 $ d'assistance cartel (cooldown 3min)</div>
+  <div><span class="font-bold text-cyan-300">bonus</span>                   : Réclamer l'aide cartel selon votre rang VIP (cooldown 3min)</div>
   <div><span class="font-bold text-cyan-300">emprunt &lt;montant&gt;</span>        : Emprunter au cartel (max 5000$, intérêt 30%)</div>
   <div><span class="font-bold text-cyan-300">rembourser [montant|all]</span> : Rembourser votre dette</div>
   <div><span class="font-bold text-cyan-300">theme [nom]</span>             : Changer la couleur (amber, matrix, cyberpunk, crimson, gold)</div>
   <div><span class="font-bold text-cyan-300">logout / deconnexion</span>    : Sauvegarder et changer d'utilisateur</div>
   <div><span class="font-bold text-cyan-300">clear</span>                   : Effacer l'écran du terminal</div>
-  
+
   ${STATE.isAdmin ? `
   <div class="pt-2 text-yellow-400 font-bold border-t border-yellow-500/50 mt-2">=== CONSOLE PRIVILÉGIÉE // ROOT ADMIN ===</div>
   <div><span class="font-bold text-yellow-300">give &lt;montant&gt;</span>          : Créditer instantanément des jetons</div>
@@ -1357,7 +1357,7 @@
       const netProfit = STATE.stats.totalWon - STATE.stats.totalLost;
       const profitFormatted = netProfit >= 0 ? `+${netProfit.toLocaleString()} $` : `-${Math.abs(netProfit).toLocaleString()} $`;
       const profitClass = netProfit >= 0 ? 'text-emerald-400' : 'text-red-400';
-      const winRateGlobal = STATE.stats.gamesPlayed > 0 
+      const winRateGlobal = STATE.stats.gamesPlayed > 0
         ? Math.round(((STATE.stats.byGame.slots.won + STATE.stats.byGame.bj.won + STATE.stats.byGame.roulette.won + STATE.stats.byGame.crash.won + STATE.stats.byGame.dés.won) / STATE.stats.gamesPlayed) * 100)
         : 0;
 
@@ -1411,29 +1411,28 @@
       const vipHtml = `
 <div class="my-1 p-2 sm:p-3 border border-[var(--term-border)] bg-black/40 rounded-lg space-y-2">
   <div class="text-yellow-300 font-bold text-sm border-b border-[var(--term-border)] pb-1">
-    === HIÉRARCHIE DU CLUB PRIVÉ VIP ===
+    === HIÉRARCHIE DU CLUB PRIVÉ VIP & BONUS CARTEL ===
   </div>
   <div class="text-xs space-y-1.5">
     <div class="flex justify-between items-center ${STATE.balance < 1000 ? 'text-white font-bold' : 'opacity-60'}">
-      <span>🥉 BRONZE</span>
-      <span>0 $ à 999 $</span>
+      <span>🥉 BRONZE (0 $ à 999 $)</span>
+      <span class="text-emerald-400 font-semibold">Bonus : 400 $ à 600 $</span>
     </div>
     <div class="flex justify-between items-center ${STATE.balance >= 1000 && STATE.balance < 3000 ? 'text-white font-bold' : 'opacity-60'}">
-      <span>🥈 ARGENT</span>
-      <span>1,000 $ à 2,999 $</span>
+      <span>🥈 ARGENT (1,000 $ à 2,999 $)</span>
+      <span class="text-emerald-400 font-semibold">Bonus : 300 $ à 700 $</span>
     </div>
     <div class="flex justify-between items-center ${STATE.balance >= 3000 && STATE.balance < 10000 ? 'text-yellow-300 font-bold' : 'opacity-60'}">
-      <span>🥇 OR</span>
-      <span>3,000 $ à 9,999 $</span>
+      <span>🥇 OR (3,000 $ à 9,999 $)</span>
+      <span class="text-yellow-300 font-semibold">Bonus : 200 $ à 800 $</span>
     </div>
     <div class="flex justify-between items-center ${STATE.balance >= 10000 && STATE.balance < 25000 ? 'text-purple-300 font-bold' : 'opacity-60'}">
-      <span>👑 PLATINUM</span>
-      <span>10,000 $ à 24,999 $</span>
+      <span>👑 PLATINUM (10,000 $ à 24,999 $)</span>
+      <span class="text-purple-300 font-semibold">Bonus : 100 $ à 900 $</span>
     </div>
     <div class="flex justify-between items-center ${STATE.balance >= 25000 ? 'text-cyan-300 font-bold' : 'opacity-60'}">
-      <span>💎 DIAMANT</span>
-      <span>25,000 $ et plus</span>
-      <span class="text-[11px] text-yellow-300 font-semibold">✨ Débloque le Thème Or Impérial</span>
+      <span>💎 DIAMANT (25,000 $ et plus)</span>
+      <span class="text-cyan-300 font-semibold">Bonus : 0 $ à 1,000 $ (✨ Thème Or)</span>
     </div>
   </div>
 
@@ -1482,7 +1481,7 @@
     <span class="font-bold text-yellow-300 text-xs sm:text-sm">=== STATISTIQUES JOUEUR : TAUX DE VICTOIRES ===</span>
     <span class="text-xs text-white">Parties totales : <span class="font-bold">${STATE.stats.gamesPlayed}</span></span>
   </div>
-  
+
   <div class="space-y-1.5 text-xs font-mono">
     <div class="flex items-center justify-between">
       <span class="w-28 text-[var(--term-accent)]">🎰 Slots:</span>
@@ -1631,8 +1630,8 @@
           if (winAmount > 0) {
             STATE.stats.byGame.slots.won++;
             const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(winAmount, 'slots');
-            const streakTag = bonusMoney > 0 
-              ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>` 
+            const streakTag = bonusMoney > 0
+              ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
               : (consecutiveWins === 1 ? ` <span class="text-yellow-500/80 text-[11px] font-semibold">(1ère victoire - gagnez la suivante pour lancer la série 🔥)</span>` : '');
 
             print(`🏆 VICTOIRE ! ${message} +${totalWin.toLocaleString()} $${streakTag}`, 'win');
@@ -1739,7 +1738,7 @@
       }
 
       let optionsList = '<span class="text-yellow-300 font-bold">hit</span> (carte), <span class="text-yellow-300 font-bold">stand</span> (rester)';
-      
+
       const hasFundsForExtra = STATE.balance >= bet;
       if (hasFundsForExtra) {
         optionsList += ', <span class="text-yellow-300 font-bold">double</span> (doubler)';
@@ -2001,8 +2000,8 @@
         const baseWin = Math.floor(g.bet * 2.5);
         STATE.stats.byGame.bj.won++;
         const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWin, 'bj');
-        const streakTag = bonusMoney > 0 
-          ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>` 
+        const streakTag = bonusMoney > 0
+          ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
           : (consecutiveWins === 1 ? ` <span class="text-yellow-500/80 text-[11px] font-semibold">(1ère victoire - gagnez la suivante pour lancer la série 🔥)</span>` : '');
         print(`⚡ BLACKJACK NATUREL ! Victoire 3:2 (+${totalWin.toLocaleString()} $${streakTag}) !`, 'win');
         sound.bigWin();
@@ -2010,8 +2009,8 @@
         const baseWin = g.bet * 2;
         STATE.stats.byGame.bj.won++;
         const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWin, 'bj');
-        const streakTag = bonusMoney > 0 
-          ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>` 
+        const streakTag = bonusMoney > 0
+          ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
           : (consecutiveWins === 1 ? ` <span class="text-yellow-500/80 text-[11px] font-semibold">(1ère victoire - gagnez la suivante pour lancer la série 🔥)</span>` : '');
         const msg = outcome === 'dealer_bust' ? 'Le croupier dépasse 21 !' : 'Vous battez le croupier !';
         print(`🏆 VICTOIRE ! ${msg} (+${totalWin.toLocaleString()} $${streakTag}) !`, 'win');
@@ -2070,9 +2069,9 @@
             winningColor = redNumbers.includes(winningNumber) ? 'rouge' : 'noir';
           }
 
-          const colorBadge = winningColor === 'rouge' 
+          const colorBadge = winningColor === 'rouge'
             ? '<span class="bg-red-600 text-white px-1.5 py-0.5 rounded font-bold">ROUGE</span>'
-            : (winningColor === 'noir' 
+            : (winningColor === 'noir'
               ? '<span class="bg-gray-800 text-white px-1.5 py-0.5 rounded font-bold">NOIR</span>'
               : '<span class="bg-green-600 text-white px-1.5 py-0.5 rounded font-bold">VERT (0)</span>');
 
@@ -2107,8 +2106,8 @@
             const baseWin = bet * winMultiplier;
             STATE.stats.byGame.roulette.won++;
             const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWin, 'roulette');
-            const streakTag = bonusMoney > 0 
-              ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>` 
+            const streakTag = bonusMoney > 0
+              ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
               : (consecutiveWins === 1 ? ` <span class="text-yellow-500/80 text-[11px] font-semibold">(1ère victoire - gagnez la suivante pour lancer la série 🔥)</span>` : '');
             print(`🏆 VICTOIRE ROULETTE ! Rapport x${winMultiplier} (+${totalWin.toLocaleString()} $${streakTag}) !`, 'win');
             if (winMultiplier >= 10) sound.bigWin(); else sound.win();
@@ -2179,8 +2178,8 @@
 
           STATE.activeGame = null;
           STATE.gameData = {};
-          promptLabel.textContent = STATE.isAdmin 
-            ? `[ADMIN-ROOT] ${STATE.currentUser}@vegas:~#` 
+          promptLabel.textContent = STATE.isAdmin
+            ? `[ADMIN-ROOT] ${STATE.currentUser}@vegas:~#`
             : `${STATE.currentUser}@vegas:~$`;
           saveState();
         }
@@ -2199,8 +2198,8 @@
         const baseWon = Math.floor(g.bet * g.currentMultiplier);
         STATE.stats.byGame.crash.won++;
         const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWon, 'crash');
-        const streakTag = bonusMoney > 0 
-          ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>` 
+        const streakTag = bonusMoney > 0
+          ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
           : (consecutiveWins === 1 ? ` <span class="text-yellow-500/80 text-[11px] font-semibold">(1ère victoire - gagnez la suivante pour lancer la série 🔥)</span>` : '');
 
         print(`🎯 ÉJECTION RÉUSSIE À ${g.currentMultiplier.toFixed(2)}x ! Vous encaissez +${totalWin.toLocaleString()} $${streakTag} !`, 'win');
@@ -2209,8 +2208,8 @@
 
         STATE.activeGame = null;
         STATE.gameData = {};
-        promptLabel.textContent = STATE.isAdmin 
-          ? `[ADMIN-ROOT] ${STATE.currentUser}@vegas:~#` 
+        promptLabel.textContent = STATE.isAdmin
+          ? `[ADMIN-ROOT] ${STATE.currentUser}@vegas:~#`
           : `${STATE.currentUser}@vegas:~$`;
       } else {
         print(`Tapez 'stop' pour encaisser !`, 'warn');
@@ -2271,8 +2270,8 @@
         const baseWin = Math.floor(bet * multiplier);
         STATE.stats.byGame.dés.won++;
         const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWin, 'dés');
-        const streakTag = bonusMoney > 0 
-          ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>` 
+        const streakTag = bonusMoney > 0
+          ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
           : (consecutiveWins === 1 ? ` <span class="text-yellow-500/80 text-[11px] font-semibold">(1ère victoire - gagnez la suivante pour lancer la série 🔥)</span>` : '');
         print(`🏆 VICTOIRE DÉS ! Condition validée (+${totalWin.toLocaleString()} $${streakTag}) !`, 'win');
         sound.win();
@@ -2295,11 +2294,41 @@
         return;
       }
 
+      let minBonus = 400;
+      let maxBonus = 600;
+      let rankName = '🥉 BRONZE';
+
+      if (STATE.isAdmin || STATE.balance >= 25000) {
+        minBonus = 0;
+        maxBonus = 1000;
+        rankName = STATE.isAdmin ? '👑 ADMIN' : '💎 DIAMANT';
+      } else if (STATE.balance >= 10000) {
+        minBonus = 100;
+        maxBonus = 900;
+        rankName = '👑 PLATINUM';
+      } else if (STATE.balance >= 3000) {
+        minBonus = 200;
+        maxBonus = 800;
+        rankName = '🥇 OR';
+      } else if (STATE.balance >= 1000) {
+        minBonus = 300;
+        maxBonus = 700;
+        rankName = '🥈 ARGENT';
+      }
+
+      const bonusAmount = Math.floor(Math.random() * (maxBonus - minBonus + 1)) + minBonus;
+
       STATE.lastBonus = now;
-      STATE.balance += 250;
+      STATE.balance += bonusAmount;
       saveState();
-      print(`🎁 Subvention du cartel accordée : +250 $ crédités ! Solde : ${STATE.balance.toLocaleString()} $.`, 'win');
-      sound.win();
+
+      if (bonusAmount > 0) {
+        print(`🎁 Subvention cartel [${rankName}] (${minBonus} $ - ${maxBonus} $) : +${bonusAmount.toLocaleString()} $ crédités ! Solde : ${STATE.balance.toLocaleString()} $.`, 'win');
+        sound.win();
+      } else {
+        print(`🎁 Subvention cartel [${rankName}] (${minBonus} $ - ${maxBonus} $) : 0 $ tiré ! Pas de chance cette fois. Solde : ${STATE.balance.toLocaleString()} $.`, 'warn');
+        sound.lose();
+      }
     }
 
     function takeLoan(amountStr) {
@@ -2317,7 +2346,6 @@
       STATE.balance += amount;
       STATE.debt += amount + interest;
       saveState();
-
       print(`🤝 Prêt accordé : +${amount.toLocaleString()} $ ! Dette enregistrée : +${(amount + interest).toLocaleString()} $ (intérêt 30%).`, 'win');
       sound.win();
     }
@@ -2332,7 +2360,7 @@
       if (!amountStr || amountStr.toLowerCase() === 'all' || amountStr.toLowerCase() === 'max') {
         amount = Math.min(STATE.debt, STATE.balance);
       } else {
-        amount = parseInt(amountStr, 10);
+              amount = parseInt(amountStr, 10);
       }
 
       if (isNaN(amount) || amount <= 0) {
@@ -2375,7 +2403,7 @@
         print(`🔒 Le thème '${themeObj.name}' n'est pas encore acheté !`, 'warn');
         print(`Prix : <span class="text-yellow-300 font-bold">${themeObj.price?.toLocaleString()} $</span>. Tapez <span class="text-white font-mono bg-black/60 px-1 border border-[var(--term-border)]">theme buy ${themeObj.code}</span> ou achetez-le dans les Paramètres.`, 'warn');
         sound.lose();
-        return;
+                return;
       }
 
       applyTheme(themeObj.id);
@@ -2501,9 +2529,8 @@
       } else {
         print(`Commande inconnue : '${cmd}'. Tapez <span class="text-yellow-300 font-bold underline">help</span> pour le catalogue.`, 'error');
       }
-
       saveState();
-    }
+      }
 
     termInput?.addEventListener('keydown', (e) => {
       sound.init();
