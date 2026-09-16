@@ -148,10 +148,14 @@
           <span class="text-gray-300 font-semibold">SÉRIE:</span>
           <span id="hud-streak" class="font-bold text-orange-400 tracking-wide">🔥 0 (+0%)</span>
         </div>
+        <div class="w-32 bg-black/50 px-2 py-1 rounded border border-cyan-500/30" title="Récompense automatique selon le temps de jeu cumulé">
+          <div class="flex justify-between gap-2 text-[9px] leading-none"><span class="text-cyan-300 font-bold">TEMPS</span><span id="hud-playtime-label" class="text-gray-300">00:00 / +50 $</span></div>
+          <div class="mt-1 h-1 rounded-full bg-cyan-950/70 overflow-hidden"><div id="hud-playtime-bar" class="h-full w-0 bg-cyan-400 transition-all duration-700"></div></div>
+        </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <button id="btn-store" class="px-2.5 py-1 rounded border border-cyan-500/70 bg-cyan-950/30 text-cyan-300 hover:bg-cyan-900/40 transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Boutique de thèmes">
+        <button id="btn-store" class="px-2.5 py-1 rounded border border-cyan-500/70 bg-cyan-950/30 text-cyan-300 hover:bg-cyan-900/40 transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Boutique de thèmes et musiques">
           🛍️ BOUTIQUE
         </button>
         <button id="btn-settings" class="px-2.5 py-1 rounded border border-yellow-500/70 bg-yellow-950/30 text-yellow-300 hover:bg-yellow-900/40 transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Paramètres & Raccourcis">
@@ -184,7 +188,7 @@
             <span class="font-semibold text-[var(--term-accent)]">MUSIQUE D'AMBIANCE :</span>
             <span id="settings-music-indicator" class="text-xs px-2 py-0.5 rounded font-mono bg-emerald-950 border border-emerald-500 text-emerald-300">ACTIVE 🎵</span>
           </div>
-          <div class="text-[11px] opacity-70">Boucle mélodique cyber-casino avec accords synthétiques.</div>
+          <div id="settings-current-music" class="text-[11px] opacity-70">Boucle mélodique cyber-casino avec accords synthétiques.</div>
           <div class="flex gap-2">
             <button id="settings-music-on" class="flex-1 py-1.5 px-3 rounded border border-emerald-500 bg-emerald-900/40 text-emerald-300 text-xs font-bold">🎵 ACTIVER</button>
             <button id="settings-music-off" class="flex-1 py-1.5 px-3 rounded border border-[var(--term-border)] text-xs font-bold opacity-60 hover:opacity-100 hover:bg-[var(--term-border)]/40">🔇 COUPER</button>
@@ -234,12 +238,17 @@
     <div id="store-modal" class="hidden absolute inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
       <div class="w-full max-w-lg bg-[var(--term-bg)] border-2 border-cyan-500/70 rounded-xl shadow-2xl p-4 sm:p-5 flex flex-col gap-4 text-xs sm:text-sm font-mono term-text max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b border-[var(--term-border)] pb-2">
-          <div class="font-bold text-cyan-300 text-sm flex items-center gap-2"><span>🛍️</span><span>BOUTIQUE // THÈMES CRT</span></div>
+          <div class="font-bold text-cyan-300 text-sm flex items-center gap-2"><span>🛍️</span><span>BOUTIQUE // THÈMES & MUSIQUES</span></div>
           <button id="btn-close-store" class="px-2 py-0.5 rounded border border-[var(--term-border)] hover:bg-red-950/50 hover:border-red-500 text-white transition text-xs font-bold">✕ FERMER</button>
         </div>
-        <div id="store-guest-notice" class="hidden text-xs text-yellow-300 border border-yellow-500/50 bg-yellow-950/30 rounded p-2">Connectez-vous pour acheter ou équiper des thèmes.</div>
-        <div class="text-[11px] opacity-70">Achetez ou équipez votre palette d’affichage.</div>
+        <div id="store-guest-notice" class="hidden text-xs text-yellow-300 border border-yellow-500/50 bg-yellow-950/30 rounded p-2">Connectez-vous pour acheter ou équiper des thèmes et musiques.</div>
+        <div class="text-[11px] opacity-70">Achetez ou équipez votre palette d’affichage et votre ambiance musicale.</div>
+        <div class="text-[var(--term-accent)] font-bold text-xs border-b border-[var(--term-border)] pb-1">PALETTES CRT</div>
         <div id="settings-themes-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        <div class="text-[var(--term-accent)] font-bold text-xs border-b border-[var(--term-border)] pb-1 mt-1">MUSIQUES D’AMBIANCE</div>
+        <div id="store-music-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        <div class="text-[var(--term-accent)] font-bold text-xs border-b border-[var(--term-border)] pb-1 mt-1">AMÉLIORATIONS</div>
+        <div id="store-upgrades-list" class="grid grid-cols-1 gap-2"></div>
       </div>
     </div>
 
@@ -374,15 +383,41 @@
       scheduleMusicBar() {
         if (!this.musicEnabled || !this.ctx) return;
         const start = this.ctx.currentTime + 0.05;
-        const chords = [[130.81, 164.81, 196.00], [110.00, 130.81, 164.81], [146.83, 174.61, 220.00], [123.47, 155.56, 196.00]];
-        const melody = [329.63, 392.00, 440.00, 523.25, 440.00, 392.00, 329.63, 293.66, 261.63, 329.63, 392.00, 493.88, 587.33, 493.88, 392.00, 329.63, 293.66, 329.63, 392.00, 523.25, 440.00, 392.00, 329.63, 261.63];
+        const arrangements = {
+          'music-cyber': {
+            chords: [[130.81, 164.81, 196.00], [110.00, 130.81, 164.81], [146.83, 174.61, 220.00], [123.47, 155.56, 196.00]],
+            melody: [329.63, 392, 440, 523.25, 440, 392, 329.63, 293.66, 261.63, 329.63, 392, 493.88, 587.33, 493.88, 392, 329.63, 293.66, 329.63, 392, 523.25, 440, 392, 329.63, 261.63],
+            type: 'triangle', tempo: 0.2, chordType: 'sine'
+          },
+          'music-lofi': {
+            chords: [[130.81, 155.56, 196], [110, 130.81, 164.81], [146.83, 174.61, 220], [123.47, 146.83, 185]],
+            melody: [392, 329.63, 293.66, 261.63, 293.66, 329.63, 246.94, 293.66, 329.63, 392, 440, 392, 329.63, 293.66, 261.63, 220],
+            type: 'sine', tempo: 0.3, chordType: 'triangle'
+          },
+          'music-rock': {
+            chords: [[82.41, 123.47, 164.81], [73.42, 110, 146.83], [98, 146.83, 196], [87.31, 130.81, 174.61]],
+            melody: [164.81, 164.81, 196, 246.94, 220, 196, 164.81, 146.83, 196, 196, 220, 293.66, 246.94, 220, 196, 164.81],
+            type: 'sawtooth', tempo: 0.3, noteDuration: 0.42, arpeggiate: false, chordType: 'square'
+          },
+          'music-strings': {
+            chords: [[130.81, 196, 261.63], [110, 164.81, 220], [146.83, 220, 293.66], [123.47, 185, 246.94]],
+            melody: [329.63, 392, 440, 493.88, 523.25, 440, 392, 329.63, 293.66, 329.63, 440, 493.88, 587.33, 523.25, 440, 329.63],
+            type: 'triangle', tempo: 0.3, chordType: 'sine'
+          },
+          'music-orchestra': {
+            chords: [[65.41, 98, 130.81], [73.42, 110, 146.83], [82.41, 123.47, 164.81], [61.74, 92.5, 123.47]],
+            melody: [261.63, 392, 493.88, 587.33, 659.25, 587.33, 493.88, 440, 329.63, 440, 523.25, 659.25, 783.99, 698.46, 587.33, 493.88],
+            type: 'sine', tempo: 0.3, noteDuration: 0.46, arpeggiate: false, chordType: 'triangle'
+          }
+        };
+        const { chords, melody, type, tempo, noteDuration, arpeggiate = true, chordType } = arrangements[this.musicStyle] || arrangements['music-cyber'];
         chords.forEach((chord, bar) => {
-          chord.forEach((note, i) => this.musicNote(note, start + bar * 1.2, 1.05, i === 0 ? 0.018 : 0.011, i === 0 ? 'triangle' : 'sine'));
-          chord.slice(1).forEach((note, i) => this.musicNote(note, start + bar * 1.2 + 0.14 + i * 0.14, 0.36, 0.012, 'sine'));
+          chord.forEach((note, i) => this.musicNote(note, start + bar * 1.2, 1.05, i === 0 ? 0.018 : 0.011, i === 0 ? chordType : 'sine'));
+          if (arpeggiate) chord.slice(1).forEach((note, i) => this.musicNote(note, start + bar * 1.2 + 0.14 + i * 0.14, 0.36, 0.012, chordType));
         });
         melody.forEach((note, i) => {
-          const when = start + i * 0.2;
-          this.musicNote(note, when, 0.17, 0.025, 'triangle');
+          const when = start + i * tempo;
+          this.musicNote(note, when, noteDuration || Math.min(0.27, tempo * 0.85), 0.025, type);
           // Une ponctuation aiguë toutes les quatre pulsations, au-dessus de la basse.
           if ((i + 1) % 4 === 0) this.musicNote(note * 2, when, 0.24, 0.016, 'sine');
         });
@@ -466,8 +501,8 @@
       'fruio_85', 'admin', 'root', 'help', 'aide', 'slots', 'slot', 'blackjack', 'bj', 'poker', 'ultimate', 'uth', 'roulette', 'roul',
       'crash', 'fusee', 'dés', 'de', 'des', 'dé', 'dice', 'profil', 'compte', 'status', 'me', 'vip', 'grades', 'rangs',
       'solde', 'balance', 'cash', 'argent', 'stats', 'winrate', 'proba', 'probas', 'probabilites', 'cotes', 'odds',
-      'bonus', 'daily', 'emprunt', 'pret', 'rembourser', 'pay', 'theme', 'skin', 'color', 'clear', 'cls',
-      'give', 'unroot', 'demote', 'exitroot', 'settings', 'config', 'logout', 'deconnexion', 'hit', 'stand', 'double', 'split'
+      'bonus', 'daily', 'emprunt', 'pret', 'rembourser', 'pay', 'theme', 'thème', 'skin', 'color', 'music', 'musique', 'boutique', 'store', 'shop', 'clear', 'cls',
+      'give', 'unroot', 'demote', 'exitroot', 'settings', 'parametres', 'paramètres', 'config', 'logout', 'deconnexion', 'hit', 'stand', 'double', 'split'
     ];
 
     const THEMES_CATALOG = [
@@ -480,11 +515,11 @@
     ];
 
     const MUSIC_CATALOG = [
-      { id: 'music-cyber', name: '🎹 Cyber Piano', description: 'Accords synthétiques graves', price: 0 },
-      { id: 'music-lofi', name: '🌙 Lo‑Fi Casino', description: 'Rythme doux et feutré', price: 1800 },
-      { id: 'music-rock', name: '🎸 Neon Rock', description: 'Riff énergique et accords puissants', price: 3200 },
-      { id: 'music-strings', name: '🎻 Piano à cordes', description: 'Piano intime et nappes de cordes', price: 4500 },
-      { id: 'music-orchestra', name: '🎼 Orchestrale', description: 'Grandeur symphonique cinématique', price: 7000 }
+      { id: 'music-cyber', code: 'cyber', name: '🎹 Cyber Piano', description: 'Accords synthétiques graves', price: 0 },
+      { id: 'music-lofi', code: 'lofi', name: '🌙 Lo‑Fi Casino', description: 'Rythme doux et feutré', price: 1800 },
+      { id: 'music-rock', code: 'rock', name: '🎸 Neon Rock', description: 'Riff énergique et accords puissants', price: 3200 },
+      { id: 'music-strings', code: 'cordes', name: '🎻 Piano à cordes', description: 'Piano intime et nappes de cordes', price: 4500 },
+      { id: 'music-orchestra', code: 'orchestrale', name: '🎼 Orchestrale', description: 'Grandeur symphonique cinématique', price: 7000 }
     ];
 
     const STATE = {
@@ -522,6 +557,9 @@
       currentTheme: 'theme-matrix',
       purchasedMusic: ['music-cyber'],
       currentMusic: 'music-cyber',
+      playtimeSeconds: 0,
+      claimedPlaytimeRewards: [],
+      afkPass: false,
       themes: [...THEMES_CATALOG],
       music: [...MUSIC_CATALOG],
       shortcuts: [...DEFAULT_SHORTCUTS]
@@ -561,6 +599,9 @@
         currentTheme: STATE.currentTheme,
         purchasedMusic: STATE.purchasedMusic,
         currentMusic: STATE.currentMusic,
+        playtimeSeconds: STATE.playtimeSeconds,
+        claimedPlaytimeRewards: STATE.claimedPlaytimeRewards,
+        afkPass: STATE.afkPass,
         shortcuts: STATE.shortcuts
       };
       saveAccounts(accounts);
@@ -626,6 +667,97 @@
       return true;
     }
 
+    function isMusicUnlocked(musicId) {
+      return STATE.isAdmin || (Array.isArray(STATE.purchasedMusic) && STATE.purchasedMusic.includes(musicId));
+    }
+
+    function applyMusic(musicId) {
+      const music = STATE.music.find(item => item.id === musicId);
+      if (!music) return false;
+      if (!isMusicUnlocked(musicId)) {
+        print(`🔒 Cette musique n'est pas débloquée ! Prix : ${music.price.toLocaleString()} $. Tapez 'music buy ${music.code}' ou ouvrez la Boutique.`, 'error');
+        sound.lose();
+        return false;
+      }
+      STATE.currentMusic = musicId;
+      sound.setMusicStyle(musicId);
+      saveState();
+      return true;
+    }
+
+    function buyMusic(music) {
+      if (!music) return;
+      if (isMusicUnlocked(music.id)) {
+        if (applyMusic(music.id)) {
+          print(`🎵 Ambiance musicale basculée sur : ${music.name}.`, 'win');
+          renderSettings();
+        }
+        return;
+      }
+      if (STATE.balance < music.price) {
+        print(`Fonds insuffisants pour acheter '${music.name}'. Requis : ${music.price.toLocaleString()} $, solde : ${STATE.balance.toLocaleString()} $.`, 'error');
+        sound.lose();
+        return;
+      }
+      STATE.balance -= music.price;
+      if (!Array.isArray(STATE.purchasedMusic)) STATE.purchasedMusic = ['music-cyber'];
+      STATE.purchasedMusic.push(music.id);
+      applyMusic(music.id);
+      saveState();
+      print(`🎵 Musique '${music.name}' débloquée pour -${music.price.toLocaleString()} $ !`, 'win');
+      sound.win();
+      renderSettings();
+    }
+
+    const PLAYTIME_MILESTONES = [
+      { seconds: 5 * 60, reward: 50 },
+      { seconds: 10 * 60, reward: 100 },
+      { seconds: 30 * 60, reward: 150 },
+      { seconds: 60 * 60, reward: 200 },
+      { seconds: 2 * 60 * 60, reward: 300 }
+    ];
+
+    function formatPlaytime(seconds) {
+      const total = Math.max(0, Math.floor(seconds || 0));
+      const hours = Math.floor(total / 3600);
+      const minutes = Math.floor((total % 3600) / 60);
+      const secs = total % 60;
+      return hours > 0
+        ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+        : `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function getNextPlaytimeMilestone(seconds) {
+      const fixed = PLAYTIME_MILESTONES.find(item => item.seconds > seconds);
+      if (fixed) return fixed;
+      const nextHour = Math.floor(seconds / 3600) + 1;
+      return { seconds: nextHour * 3600, reward: nextHour * 100 + 100 };
+    }
+
+    function getEarnedPlaytimeMilestones(seconds) {
+      const milestones = PLAYTIME_MILESTONES.filter(item => item.seconds <= seconds);
+      for (let hour = 3; hour <= Math.floor(seconds / 3600); hour++) {
+        milestones.push({ seconds: hour * 3600, reward: hour * 100 + 100 });
+      }
+      return milestones;
+    }
+
+    function buyAfkPass() {
+      if (STATE.afkPass) return;
+      const price = 10000;
+      if (STATE.balance < price) {
+        print(`Fonds insuffisants pour acheter le Module AFK. Requis : ${price.toLocaleString()} $.`, 'error');
+        sound.lose();
+        return;
+      }
+      STATE.balance -= price;
+      STATE.afkPass = true;
+      saveState();
+      print(`🤖 Module AFK installé ! Hors présence, votre temps cumulé progresse désormais à 10 % de la vitesse normale.`, 'win');
+      sound.win();
+      renderSettings();
+    }
+
     const termBody = document.getElementById('terminal-body');
     const termInput = document.getElementById('term-input');
     const promptLabel = document.getElementById('prompt-label');
@@ -634,6 +766,8 @@
     const hudDebt = document.getElementById('hud-debt');
     const hudVip = document.getElementById('hud-vip');
     const hudStreak = document.getElementById('hud-streak');
+    const hudPlaytimeLabel = document.getElementById('hud-playtime-label');
+    const hudPlaytimeBar = document.getElementById('hud-playtime-bar');
     const quickBar = document.getElementById('quick-bar');
     const termFooter = document.getElementById('term-footer');
 
@@ -650,8 +784,11 @@
     const settingsMusicOn = document.getElementById('settings-music-on');
     const settingsMusicOff = document.getElementById('settings-music-off');
     const settingsMusicIndicator = document.getElementById('settings-music-indicator');
+    const settingsCurrentMusic = document.getElementById('settings-current-music');
     const settingsShortcutsSection = document.getElementById('settings-shortcuts-section');
     const settingsThemesList = document.getElementById('settings-themes-list');
+    const storeMusicList = document.getElementById('store-music-list');
+    const storeUpgradesList = document.getElementById('store-upgrades-list');
     const settingsShortcutsList = document.getElementById('settings-shortcuts-list');
     const inputNewShortcut = document.getElementById('input-new-shortcut');
     const btnAddShortcut = document.getElementById('btn-add-shortcut');
@@ -716,7 +853,81 @@
           hudStreak.className = 'font-bold text-gray-500 tracking-wide';
         }
       }
+
+      const totalTime = STATE.playtimeSeconds || 0;
+      const nextMilestone = getNextPlaytimeMilestone(totalTime);
+      const previousThreshold = getEarnedPlaytimeMilestones(totalTime).reduce((latest, item) => Math.max(latest, item.seconds), 0);
+      const range = nextMilestone.seconds - previousThreshold;
+      const progress = range > 0 ? ((totalTime - previousThreshold) / range) * 100 : 0;
+      if (hudPlaytimeLabel) hudPlaytimeLabel.textContent = `${formatPlaytime(totalTime)} / +${nextMilestone.reward} $`;
+      if (hudPlaytimeBar) hudPlaytimeBar.style.width = `${Math.max(0, Math.min(100, progress))}%`;
     }
+
+    let lastPlaytimeTick = Date.now();
+    let lastPlaytimeSave = Date.now();
+    let musicPausedForAbsence = false;
+
+    function isPlayerPresent() {
+      return document.visibilityState === 'visible' && document.hasFocus();
+    }
+
+    function updatePresenceAudio() {
+      const present = isPlayerPresent();
+      if (!present && !musicPausedForAbsence) {
+        sound.stopMusic();
+        musicPausedForAbsence = true;
+      } else if (present && musicPausedForAbsence) {
+        musicPausedForAbsence = false;
+        sound.startMusic();
+      }
+    }
+
+    function creditPlaytimeRewards() {
+      const claimed = new Set((STATE.claimedPlaytimeRewards || []).map(String));
+      const earned = getEarnedPlaytimeMilestones(STATE.playtimeSeconds);
+      let credited = false;
+
+      earned.forEach(milestone => {
+        const id = String(milestone.seconds);
+        if (claimed.has(id)) return;
+        claimed.add(id);
+        STATE.balance += milestone.reward;
+        print(`⏱ Récompense de temps de jeu : +${milestone.reward.toLocaleString()} $ pour ${formatPlaytime(milestone.seconds)} de jeu cumulé !`, 'win');
+        sound.win();
+        credited = true;
+      });
+
+      if (credited) STATE.claimedPlaytimeRewards = [...claimed];
+      return credited;
+    }
+
+    function trackPlaytime() {
+      const now = Date.now();
+      const elapsedSeconds = Math.max(0, (now - lastPlaytimeTick) / 1000);
+      lastPlaytimeTick = now;
+      updatePresenceAudio();
+      if (!STATE.currentUser || STATE.authStep) return;
+
+      const present = isPlayerPresent();
+      const earnedSeconds = present ? elapsedSeconds : (STATE.afkPass ? elapsedSeconds * 0.1 : 0);
+      if (earnedSeconds <= 0) {
+        updateHUD();
+        return;
+      }
+
+      STATE.playtimeSeconds += earnedSeconds;
+      const rewarded = creditPlaytimeRewards();
+      updateHUD();
+      if (rewarded || now - lastPlaytimeSave >= 10000) {
+        lastPlaytimeSave = now;
+        saveState();
+      }
+    }
+
+    document.addEventListener('visibilitychange', updatePresenceAudio);
+    window.addEventListener('focus', updatePresenceAudio);
+    window.addEventListener('blur', updatePresenceAudio);
+    setInterval(trackPlaytime, 1000);
 
     function applyWinStreak(baseWin, gameName) {
       STATE.consecutiveWins = (STATE.consecutiveWins || 0) + 1;
@@ -814,6 +1025,11 @@
         settingsMusicOn.className = 'flex-1 py-1.5 px-3 rounded border border-[var(--term-border)] text-xs font-bold opacity-60 hover:opacity-100 hover:bg-[var(--term-border)]/40';
       }
 
+      const currentMusic = STATE.music.find(item => item.id === STATE.currentMusic) || STATE.music[0];
+      if (settingsCurrentMusic && currentMusic) {
+        settingsCurrentMusic.textContent = `${currentMusic.name} — ${currentMusic.description}`;
+      }
+
       if (isGuest) return;
 
       settingsThemesList.innerHTML = '';
@@ -873,6 +1089,51 @@
         settingsThemesList.appendChild(btn);
       });
 
+      storeMusicList.innerHTML = '';
+      STATE.music.forEach(music => {
+        const isCurrent = STATE.currentMusic === music.id;
+        const unlocked = isMusicUnlocked(music.id);
+        const card = document.createElement('div');
+        card.className = `py-2 px-2.5 rounded border text-xs font-semibold flex items-center justify-between gap-2 transition ${
+          isCurrent
+            ? 'border-yellow-400 bg-yellow-950/40 text-yellow-300 font-bold'
+            : 'border-[var(--term-border)] bg-black/40 text-white'
+        }`;
+        const price = music.price === 0
+          ? '<span class="text-[10px] text-emerald-400/90 font-normal">Prix : Gratuit</span>'
+          : `<span class="text-[10px] text-orange-300/90 font-normal">Prix : ${music.price.toLocaleString()} $</span>`;
+        let action = '';
+        if (isCurrent) {
+          action = '<span class="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300">ACTIVE ✓</span>';
+        } else if (unlocked) {
+          action = '<button class="btn-equip-music text-[10px] px-2 py-0.5 rounded bg-[var(--term-border)] hover:bg-[var(--term-green)] hover:text-black transition">ÉQUIPER</button>';
+        } else {
+          action = '<button class="btn-buy-music text-[10px] px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500 text-emerald-300 hover:bg-emerald-800 hover:text-white transition">ACHETER</button>';
+        }
+        card.innerHTML = `<div class="flex flex-col text-left leading-tight"><span class="font-bold text-xs">${music.name}</span><span class="text-[10px] opacity-70 font-normal">${music.description}</span>${price}</div><div class="shrink-0">${action}</div>`;
+        card.querySelector('.btn-equip-music')?.addEventListener('click', () => {
+          applyMusic(music.id);
+          renderSettings();
+        });
+        card.querySelector('.btn-buy-music')?.addEventListener('click', () => buyMusic(music));
+        storeMusicList.appendChild(card);
+      });
+
+      storeUpgradesList.innerHTML = '';
+      const afkCard = document.createElement('div');
+      afkCard.className = `py-2.5 px-3 rounded border text-xs font-semibold flex items-center justify-between gap-3 ${
+        STATE.afkPass ? 'border-yellow-400 bg-yellow-950/40 text-yellow-300' : 'border-[var(--term-border)] bg-black/40 text-white'
+      }`;
+      afkCard.innerHTML = `
+        <div class="flex flex-col text-left leading-tight">
+          <span class="font-bold text-xs">🤖 Module AFK</span>
+          <span class="text-[10px] opacity-70 font-normal">Crédite 10 % du temps lorsque l’onglet ou le navigateur n’est plus actif.</span>
+          <span class="text-[10px] ${STATE.afkPass ? 'text-yellow-300' : 'text-orange-300'} font-normal">${STATE.afkPass ? 'INSTALLÉ ✓' : 'Prix : 10 000 $'}</span>
+        </div>
+        <div class="shrink-0">${STATE.afkPass ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300">ACTIF ✓</span>' : '<button class="btn-buy-afk text-[10px] px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500 text-emerald-300 hover:bg-emerald-800 hover:text-white transition">ACHETER</button>'}</div>`;
+      afkCard.querySelector('.btn-buy-afk')?.addEventListener('click', buyAfkPass);
+      storeUpgradesList.appendChild(afkCard);
+
       settingsShortcutsList.innerHTML = '';
       if (STATE.shortcuts.length === 0) {
         settingsShortcutsList.innerHTML = '<span class="text-xs opacity-50 p-1">Aucun raccourci défini.</span>';
@@ -919,6 +1180,9 @@
       renderSettings();
       if (storeGuestNotice) storeGuestNotice.classList.toggle('hidden', !STATE.authStep && Boolean(STATE.currentUser));
       if (settingsThemesList) settingsThemesList.style.display = STATE.authStep || !STATE.currentUser ? 'none' : 'grid';
+      if (storeMusicList) storeMusicList.style.display = STATE.authStep || !STATE.currentUser ? 'none' : 'grid';
+      if (storeUpgradesList) storeUpgradesList.style.display = STATE.authStep || !STATE.currentUser ? 'none' : 'grid';
+      if (storeUpgradesList) storeUpgradesList.style.display = STATE.authStep || !STATE.currentUser ? 'none' : 'grid';
       storeModal?.classList.remove('hidden');
       quickBar?.classList.add('hidden');
       termFooter?.classList.add('hidden');
@@ -1104,6 +1368,11 @@
             musicEnabled: currentMusicState,
             purchasedThemes: ['theme-matrix'],
             currentTheme: 'theme-matrix',
+            purchasedMusic: ['music-cyber'],
+            currentMusic: 'music-cyber',
+            playtimeSeconds: 0,
+            claimedPlaytimeRewards: [],
+            afkPass: false,
             shortcuts: [...DEFAULT_SHORTCUTS],
             stats: {
               totalBets: 0,
@@ -1149,6 +1418,11 @@
       STATE.isAdmin = account.isAdmin ?? false;
       STATE.purchasedThemes = Array.isArray(account.purchasedThemes) ? account.purchasedThemes : ['theme-matrix'];
       STATE.currentTheme = account.currentTheme || 'theme-matrix';
+      STATE.purchasedMusic = Array.isArray(account.purchasedMusic) ? account.purchasedMusic : ['music-cyber'];
+      STATE.currentMusic = account.currentMusic || 'music-cyber';
+      STATE.playtimeSeconds = Math.max(0, Number(account.playtimeSeconds) || 0);
+      STATE.claimedPlaytimeRewards = Array.isArray(account.claimedPlaytimeRewards) ? account.claimedPlaytimeRewards : [];
+      STATE.afkPass = account.afkPass === true;
       STATE.shortcuts = Array.isArray(account.shortcuts) && account.shortcuts.length > 0 ? account.shortcuts : [...DEFAULT_SHORTCUTS];
 
       if (typeof account.soundEnabled === 'boolean') {
@@ -1186,6 +1460,10 @@
       }
 
       applyTheme(STATE.currentTheme);
+      applyMusic(STATE.currentMusic);
+      lastPlaytimeTick = Date.now();
+      lastPlaytimeSave = Date.now();
+      updatePresenceAudio();
       updateHUD();
       renderQuickBar();
 
@@ -1466,6 +1744,11 @@
   <div><span class="font-bold text-cyan-300">emprunt &lt;montant&gt;</span>        : Emprunter au cartel (max 5000$, intérêt 30%)</div>
   <div><span class="font-bold text-cyan-300">rembourser [montant|all]</span> : Rembourser votre dette</div>
   <div><span class="font-bold text-cyan-300">theme [nom]</span>             : Changer la couleur (amber, matrix, cyberpunk, crimson, gold)</div>
+  <div><span class="font-bold text-cyan-300">theme buy [nom]</span>         : Acheter un thème (sans nom : ouvrir la Boutique)</div>
+  <div><span class="font-bold text-cyan-300">music [nom]</span>             : Équiper une musique (cyber, lofi, rock, cordes, orchestrale)</div>
+  <div><span class="font-bold text-cyan-300">music buy [nom]</span>         : Acheter une musique d’ambiance dans la Boutique</div>
+  <div><span class="font-bold text-cyan-300">boutique</span>                 : Ouvrir la Boutique (alias : store, shop)</div>
+  <div><span class="font-bold text-cyan-300">paramètres</span>               : Ouvrir les réglages (alias : parametres, settings, config)</div>
   <div><span class="font-bold text-cyan-300">logout / deconnexion</span>    : Sauvegarder et changer d'utilisateur</div>
   <div><span class="font-bold text-cyan-300">clear</span>                   : Effacer l'écran du terminal</div>
 
@@ -2806,7 +3089,8 @@
 
     function setTheme(name, action = null) {
       if (!name) {
-        openSettings();
+        if (action === 'buy' || action === 'acheter') openStore();
+        else openSettings();
         return;
       }
       const cleanName = name.toLowerCase();
@@ -2831,6 +3115,27 @@
 
       applyTheme(themeObj.id);
       print(`Palette d'affichage basculée sur : ${themeObj.name}.`);
+    }
+
+    function setMusic(name, action = null) {
+      if (!name) {
+        openStore();
+        return;
+      }
+      const cleanName = name.toLowerCase();
+      const music = STATE.music.find(item => item.code === cleanName || item.id === `music-${cleanName}`);
+      if (!music) {
+        print(`Musique inconnue. Disponibles : cyber, lofi, rock, cordes, orchestrale.`, 'warn');
+        return;
+      }
+      if (action === 'buy' || action === 'acheter') {
+        buyMusic(music);
+        return;
+      }
+      if (applyMusic(music.id)) {
+        print(`🎵 Ambiance musicale basculée sur : ${music.name}.`, 'win');
+        renderSettings();
+      }
     }
 
     function handleCommand(cmdLine) {
@@ -2913,13 +3218,21 @@
         takeLoan(args[0]);
       } else if (cmd === 'rembourser' || cmd === 'pay') {
         repayLoan(args[0]);
-      } else if (cmd === 'theme' || cmd === 'skin' || cmd === 'style' || cmd === 'color') {
+      } else if (cmd === 'theme' || cmd === 'thème' || cmd === 'skin' || cmd === 'style' || cmd === 'color') {
         if (args[0] === 'buy' || args[0] === 'acheter') {
           setTheme(args[1], 'buy');
         } else {
           setTheme(args[0]);
         }
-      } else if (cmd === 'settings' || cmd === 'parametres' || cmd === 'config') {
+      } else if (cmd === 'music' || cmd === 'musique') {
+        if (args[0] === 'buy' || args[0] === 'acheter') {
+          setMusic(args[1], 'buy');
+        } else {
+          setMusic(args[0]);
+        }
+      } else if (cmd === 'boutique' || cmd === 'store' || cmd === 'shop') {
+        openStore();
+      } else if (cmd === 'settings' || cmd === 'parametres' || cmd === 'paramètres' || cmd === 'config') {
         openSettings();
       } else if (cmd === 'logout' || cmd === 'deconnexion') {
         logoutUser();
@@ -3001,7 +3314,7 @@
           'help profil', 'help vip', 'help solde', 'help stats', 'help proba', 'help bonus', 'help emprunt', 'help rembourser', 'help theme', 'help clear',
           'proba', 'proba slots', 'proba bj', 'proba poker', 'proba roulette', 'proba crash', 'proba dés',
           'profil', 'vip', 'solde', 'stats', 'stats slots', 'stats bj', 'stats poker', 'stats roulette', 'stats crash', 'stats dés',
-          'bonus', 'emprunt', 'rembourser', 'theme', 'theme buy crimson', 'theme buy cyberpunk', 'theme buy amber', 'clear',
+          'bonus', 'emprunt', 'rembourser', 'theme', 'thème', 'theme buy crimson', 'theme buy cyberpunk', 'theme buy amber', 'music', 'music buy lofi', 'music buy rock', 'music buy cordes', 'music buy orchestrale', 'boutique', 'store', 'shop', 'paramètres', 'parametres', 'settings', 'config', 'clear',
           'blackjack', 'bj', 'poker', 'ultimate', 'uth', 'slots', 'slot', 'roulette', 'roul', 'crash', 'fusee', 'dés', 'des', 'dé', 'de', 'dice',
           'slots all', 'bj all', 'crash all', 'roulette all rouge', 'roulette all noir', 'rembourser all', 'logout', 'deconnexion',
           'hit', 'stand', 'double', 'split', 'play 4', 'play 2', 'play', 'check'
