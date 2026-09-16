@@ -77,7 +77,7 @@ Les contributions pour enrichir l'expérience de ce casino rétro sont les bienv
 1. Créez une branche dédiée à votre fonctionnalité (`git checkout -b feature/nouveau-jeu`).
 2. Validez vos changements avec un message explicite (`git commit -m "feat: ajout d'un nouveau jeu"`).
 3. Poussez votre branche sur le dépôt distant (`git push origin feature/nouveau-jeu`).
-4. Ouvrez une **Merge Request** sur GitLab.
+4. Ouvrez une **Merge Request** sur GitHub.
 
 ---
 
