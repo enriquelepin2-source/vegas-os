@@ -151,6 +151,9 @@
       </div>
 
       <div class="flex items-center gap-2">
+        <button id="btn-store" class="px-2.5 py-1 rounded border border-cyan-500/70 bg-cyan-950/30 text-cyan-300 hover:bg-cyan-900/40 transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Boutique de thèmes">
+          🛍️ BOUTIQUE
+        </button>
         <button id="btn-settings" class="px-2.5 py-1 rounded border border-yellow-500/70 bg-yellow-950/30 text-yellow-300 hover:bg-yellow-900/40 transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Paramètres & Raccourcis">
           ⚙️ PARAMÈTRES
         </button>
@@ -200,17 +203,6 @@
           </div>
         </div>
 
-        <!-- Theme Store & Selector -->
-        <div id="settings-theme-section" class="border border-[var(--term-border)]/70 rounded-lg p-3 bg-black/40 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="font-semibold text-[var(--term-accent)]">BOUTIQUE & THÈMES CRT :</span>
-            <span class="text-[11px] opacity-70">Achetez ou équipez vos thèmes</span>
-          </div>
-          <div id="settings-themes-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
         <!-- Shortcuts Customization -->
         <div id="settings-shortcuts-section" class="border border-[var(--term-border)]/70 rounded-lg p-3 bg-black/40 space-y-2.5">
           <div class="flex items-center justify-between">
@@ -235,6 +227,19 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Theme Store Modal -->
+    <div id="store-modal" class="hidden absolute inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+      <div class="w-full max-w-lg bg-[var(--term-bg)] border-2 border-cyan-500/70 rounded-xl shadow-2xl p-4 sm:p-5 flex flex-col gap-4 text-xs sm:text-sm font-mono term-text max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-[var(--term-border)] pb-2">
+          <div class="font-bold text-cyan-300 text-sm flex items-center gap-2"><span>🛍️</span><span>BOUTIQUE // THÈMES CRT</span></div>
+          <button id="btn-close-store" class="px-2 py-0.5 rounded border border-[var(--term-border)] hover:bg-red-950/50 hover:border-red-500 text-white transition text-xs font-bold">✕ FERMER</button>
+        </div>
+        <div id="store-guest-notice" class="hidden text-xs text-yellow-300 border border-yellow-500/50 bg-yellow-950/30 rounded p-2">Connectez-vous pour acheter ou équiper des thèmes.</div>
+        <div class="text-[11px] opacity-70">Achetez ou équipez votre palette d’affichage.</div>
+        <div id="settings-themes-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
       </div>
     </div>
 
@@ -269,6 +274,7 @@
         this.ctx = null;
         this.enabled = true;
         this.musicEnabled = true;
+        this.musicStyle = 'music-cyber';
         this.musicTimer = null;
         this.musicVoices = new Set();
       }
@@ -410,6 +416,14 @@
         if (enabled) this.startMusic(); else this.stopMusic();
       }
 
+      setMusicStyle(style) {
+        this.musicStyle = style;
+        if (this.musicTimer) {
+          this.stopMusic();
+          this.startMusic();
+        }
+      }
+
       explosion() {
         if (!this.enabled) return;
         try {
@@ -465,6 +479,14 @@
       { id: 'theme-gold', code: 'gold', name: '🟡 Or Impérial', price: 0 }
     ];
 
+    const MUSIC_CATALOG = [
+      { id: 'music-cyber', name: '🎹 Cyber Piano', description: 'Accords synthétiques graves', price: 0 },
+      { id: 'music-lofi', name: '🌙 Lo‑Fi Casino', description: 'Rythme doux et feutré', price: 1800 },
+      { id: 'music-rock', name: '🎸 Neon Rock', description: 'Riff énergique et accords puissants', price: 3200 },
+      { id: 'music-strings', name: '🎻 Piano à cordes', description: 'Piano intime et nappes de cordes', price: 4500 },
+      { id: 'music-orchestra', name: '🎼 Orchestrale', description: 'Grandeur symphonique cinématique', price: 7000 }
+    ];
+
     const STATE = {
       currentUser: null,
       authStep: 'username',
@@ -498,7 +520,10 @@
       historyIndex: -1,
       purchasedThemes: ['theme-matrix'],
       currentTheme: 'theme-matrix',
+      purchasedMusic: ['music-cyber'],
+      currentMusic: 'music-cyber',
       themes: [...THEMES_CATALOG],
+      music: [...MUSIC_CATALOG],
       shortcuts: [...DEFAULT_SHORTCUTS]
     };
 
@@ -534,6 +559,8 @@
         musicEnabled: sound.musicEnabled,
         purchasedThemes: STATE.purchasedThemes,
         currentTheme: STATE.currentTheme,
+        purchasedMusic: STATE.purchasedMusic,
+        currentMusic: STATE.currentMusic,
         shortcuts: STATE.shortcuts
       };
       saveAccounts(accounts);
@@ -588,7 +615,7 @@
       }
       if (!isThemeUnlocked(themeId)) {
         const theme = STATE.themes.find(t => t.id === themeId);
-        print(`🔒 Ce thème n'est pas débloqué ! Prix : ${theme?.price?.toLocaleString()} $. Tapez 'theme buy ${theme?.code}' ou achetez-le dans les Paramètres.`, 'error');
+        print(`🔒 Ce thème n'est pas débloqué ! Prix : ${theme?.price?.toLocaleString()} $. Tapez 'theme buy ${theme?.code}' ou ouvrez la Boutique.`, 'error');
         sound.lose();
         return false;
       }
@@ -613,13 +640,16 @@
     const settingsModal = document.getElementById('settings-modal');
     const btnSettings = document.getElementById('btn-settings');
     const btnCloseSettings = document.getElementById('btn-close-settings');
+    const storeModal = document.getElementById('store-modal');
+    const btnStore = document.getElementById('btn-store');
+    const btnCloseStore = document.getElementById('btn-close-store');
+    const storeGuestNotice = document.getElementById('store-guest-notice');
     const settingsSoundOn = document.getElementById('settings-sound-on');
     const settingsSoundOff = document.getElementById('settings-sound-off');
     const settingsSoundIndicator = document.getElementById('settings-sound-indicator');
     const settingsMusicOn = document.getElementById('settings-music-on');
     const settingsMusicOff = document.getElementById('settings-music-off');
     const settingsMusicIndicator = document.getElementById('settings-music-indicator');
-    const settingsThemeSection = document.getElementById('settings-theme-section');
     const settingsShortcutsSection = document.getElementById('settings-shortcuts-section');
     const settingsThemesList = document.getElementById('settings-themes-list');
     const settingsShortcutsList = document.getElementById('settings-shortcuts-list');
@@ -756,9 +786,6 @@
           : '<span>⚙️</span><span>CONFIG // PARAMÈTRES DU SYSTÈME</span>';
       }
 
-      if (settingsThemeSection) {
-        settingsThemeSection.style.display = isGuest ? 'none' : 'block';
-      }
       if (settingsShortcutsSection) {
         settingsShortcutsSection.style.display = isGuest ? 'none' : 'block';
       }
@@ -870,6 +897,7 @@
     }
 
     function openSettings() {
+      storeModal?.classList.add('hidden');
       renderSettings();
       settingsModal?.classList.remove('hidden');
       quickBar?.classList.add('hidden');
@@ -886,8 +914,30 @@
       termInput?.focus();
     }
 
+    function openStore() {
+      settingsModal?.classList.add('hidden');
+      renderSettings();
+      if (storeGuestNotice) storeGuestNotice.classList.toggle('hidden', !STATE.authStep && Boolean(STATE.currentUser));
+      if (settingsThemesList) settingsThemesList.style.display = STATE.authStep || !STATE.currentUser ? 'none' : 'grid';
+      storeModal?.classList.remove('hidden');
+      quickBar?.classList.add('hidden');
+      termFooter?.classList.add('hidden');
+      sound.startMusic();
+      sound.beep(700, 'triangle', 0.05, 0.05);
+    }
+
+    function closeStore() {
+      storeModal?.classList.add('hidden');
+      quickBar?.classList.remove('hidden');
+      termFooter?.classList.remove('hidden');
+      sound.beep(400, 'triangle', 0.05, 0.05);
+      termInput?.focus();
+    }
+
     btnSettings?.addEventListener('click', openSettings);
     btnCloseSettings?.addEventListener('click', closeSettings);
+    btnStore?.addEventListener('click', openStore);
+    btnCloseStore?.addEventListener('click', closeStore);
 
     settingsSoundOn?.addEventListener('click', () => {
       sound.enabled = true;
@@ -946,9 +996,8 @@
     });
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && settingsModal && !settingsModal.classList.contains('hidden')) {
-        closeSettings();
-      }
+      if (e.key === 'Escape' && settingsModal && !settingsModal.classList.contains('hidden')) closeSettings();
+      if (e.key === 'Escape' && storeModal && !storeModal.classList.contains('hidden')) closeStore();
     });
 
     function printHeader() {
@@ -2775,7 +2824,7 @@
 
       if (!isThemeUnlocked(themeObj.id)) {
         print(`🔒 Le thème '${themeObj.name}' n'est pas encore acheté !`, 'warn');
-        print(`Prix : <span class="text-yellow-300 font-bold">${themeObj.price?.toLocaleString()} $</span>. Tapez <span class="text-white font-mono bg-black/60 px-1 border border-[var(--term-border)]">theme buy ${themeObj.code}</span> ou achetez-le dans les Paramètres.`, 'warn');
+        print(`Prix : <span class="text-yellow-300 font-bold">${themeObj.price?.toLocaleString()} $</span>. Tapez <span class="text-white font-mono bg-black/60 px-1 border border-[var(--term-border)]">theme buy ${themeObj.code}</span> ou ouvrez la Boutique.`, 'warn');
         sound.lose();
                 return;
       }
