@@ -134,7 +134,7 @@
     <header class="relative z-50 flex flex-wrap items-center justify-between px-3 py-2 border-b border-[var(--term-border)] bg-black/70 text-xs term-text backdrop-blur-sm gap-2">
       <div class="flex items-center gap-2 sm:gap-3">
         <span class="inline-block w-2.5 h-2.5 rounded-full bg-[var(--term-green)] animate-ping"></span>
-        <span class="font-bold tracking-widest text-sm">VEGAS-OS <span class="text-[10px] opacity-75 font-normal">v3.8_SPLIT</span></span>
+        <span class="font-bold tracking-widest text-sm">VEGAS-OS <span class="text-[10px] opacity-75 font-normal">v0.8.1-BÊTA</span></span>
       </div>
 
       <div class="flex flex-wrap items-center gap-3 sm:gap-5 text-[11px] sm:text-xs">
@@ -1042,7 +1042,7 @@
     </div>
     <div class="p-1.5 rounded border border-[var(--term-border)] bg-black/40 flex justify-between items-center">
       <span>♠️ <span class="text-yellow-300 font-bold">BLACKJACK</span> (Table 21 & Split) :</span>
-      <span class="text-white">Blackjack: <b class="text-emerald-400">4.83%</b> | Split total: <b class="text-yellow-400">9.50%</b> | Victoire: <b class="text-emerald-400">42.2%</b></span>
+      <span class="text-white">Blackjack: <b class="text-emerald-400">4.83%</b> | Paire (Split): <b class="text-yellow-400">5.88% (1/17)</b> | Victoire: <b class="text-emerald-400">42.2%</b></span>
     </div>
     <div class="p-1.5 rounded border border-[var(--term-border)] bg-black/40 flex justify-between items-center">
       <span>🎡 <span class="text-yellow-300 font-bold">ROULETTE</span> (Européenne 37N) :</span>
@@ -1100,22 +1100,26 @@
       if (target === 'blackjack' || target === 'bj') {
         const html = `
 <div class="my-1 p-2 sm:p-3 border-l-2 border-yellow-400 bg-black/50 rounded space-y-1.5 text-xs font-mono">
-  <div class="text-yellow-300 font-bold text-sm">♠️ PROBABILITÉS DÉTAILLÉES // BLACKJACK & SPLIT</div>
+  <div class="text-yellow-300 font-bold text-sm">♠️ PROBABILITÉS DÉTAILLÉES // BLACKJACK & RÈGLE DU SPLIT</div>
   <div>Jeu basé sur un deck standard de 52 cartes (mélangé à chaque donne) :</div>
   
   <div class="p-2 rounded border border-yellow-500/40 bg-yellow-950/20 space-y-1 text-[11px]">
-    <div class="text-yellow-300 font-bold">--- PROBABILITÉS DE SPLIT INITIAL ---</div>
+    <div class="text-yellow-300 font-bold">--- PROBABILITÉS DE SPLIT (PAIRE OBLIGATOIRE) ---</div>
     <div class="flex justify-between">
-      <span>• Paire d'As [ A ] [ A ] :</span>
+      <span>• N'importe quelle paire identique (2-2, 5-5, 8-8, 10-10, J-J, Q-Q, K-K, A-A) :</span>
+      <span class="text-emerald-400 font-bold">5.88% (1 chance sur 17)</span>
+    </div>
+    <div class="flex justify-between">
+      <span>• Paire spécifique (ex: Paire d'As [A][A], Paire de 8 [8][8]) :</span>
       <span class="text-cyan-300 font-bold">0.45% (1 chance sur 221)</span>
     </div>
     <div class="flex justify-between">
-      <span>• 2 Cartes de valeur 10 (10, J, Q, K) :</span>
-      <span class="text-yellow-300 font-bold">9.05% (1 chance sur 11)</span>
+      <span>• Paire de figures identiques (10-10, J-J, Q-Q, K-K) :</span>
+      <span class="text-yellow-300 font-bold">1.81% (1 chance sur 55)</span>
     </div>
-    <div class="flex justify-between border-t border-yellow-500/30 pt-0.5">
-      <span>• Total des mains éligibles au Split :</span>
-      <span class="text-emerald-400 font-bold">9.50% (1 chance sur 10.5)</span>
+    <div class="flex justify-between border-t border-yellow-500/30 pt-0.5 text-red-400 font-semibold">
+      <span>• Cartes de valeur 10 dépareillées (10 et Roi, Dame et Valet...) :</span>
+      <span class="font-bold">SPLIT STRICTEMENT INTERDIT (0%)</span>
     </div>
   </div>
 
@@ -1275,9 +1279,9 @@
     <div>• Commandes de jeu : <span class="text-yellow-300 font-bold">hit</span> (carte), <span class="text-yellow-300 font-bold">stand</span> (rester), <span class="text-yellow-300 font-bold">double</span> (doubler).</div>
     <div>• Victoire standard : x2 | Blackjack initial (21) : x2.5 | Égalité (Push) : mise remboursée (série 🔥 préservée).</div>
   </div>
-  <div class="text-yellow-300 font-semibold mt-2 border-t border-yellow-500/40 pt-1">--- NOUVELLE RÈGLE DU SPLIT ---</div>
+  <div class="text-yellow-300 font-semibold mt-2 border-t border-yellow-500/40 pt-1">--- RÈGLE DU SPLIT (PAIRE OBLIGATOIRE) ---</div>
   <div class="pl-2 space-y-1 text-[11px] sm:text-xs">
-    <div>• <span class="text-cyan-300 font-semibold">Condition de Split :</span> Votre main de départ doit être soit une <b class="text-white">paire d'As</b> ([ A ] [ A ]), soit <b class="text-white">deux cartes valant 10</b> (10, Valet [J], Dame [Q], Roi [K]).</div>
+    <div>• <span class="text-cyan-300 font-semibold">Condition de Split :</span> Votre main de départ doit <b class="text-white">OBLIGATOIREMENT être une PAIRE de même rang</b> (ex: 2-2, 5-5, 8-8, 10-10, J-J, Q-Q, K-K, A-A). <span class="text-red-400 font-semibold">Deux cartes valant 10 dépareillées (ex: 10 et Roi, Dame et Valet, Roi et Valet) sont STRICTEMENT INTERDITES au split.</span></div>
     <div>• <span class="text-cyan-300 font-semibold">Condition de Solde :</span> Vous devez posséder au moins 1x le montant de votre mise dans votre solde pour pouvoir doubler ou spliter.</div>
     <div>• <span class="text-cyan-300 font-semibold">Déroulement :</span> Vos 2 cartes sont séparées en Main 1 et Main 2 avec une mise identique sur chacune. Une seconde carte est donnée à chaque main. Vous jouez d'abord la Main 1 (hit/stand), puis la Main 2. Si au moins 1 main n'est pas bust, le croupier joue normalement.</div>
     <div>• <span class="text-orange-400 font-semibold">🔥 Gestion de la Série :</span> Les 2 mains du split comptent comme <b class="text-white">une seule partie</b> pour la série de flammes (victoire globale = +1 flamme, nul/mixte = série préservée, défaite = série brisée).</div>
@@ -1703,10 +1707,9 @@
       const playerHand = [drawCard(), drawCard()];
       const dealerHand = [drawCard(), drawCard()];
 
-      // Check if hand is eligible for split: pair of Aces or two 10-value cards
-      const isPairOfAces = playerHand[0].val === 'A' && playerHand[1].val === 'A';
-      const isPairOfTens = getCardValue(playerHand[0]) === 10 && getCardValue(playerHand[1]) === 10;
-      const canSplit = (isPairOfAces || isPairOfTens);
+      // Strict pair check: must have the exact same card rank (2-2, 5-5, 8-8, 10-10, J-J, Q-Q, K-K, A-A)
+      // Mismatched 10-value cards (e.g. 10 & King, Queen & Jack) are strictly forbidden!
+      const canSplit = playerHand[0].val === playerHand[1].val;
 
       STATE.activeGame = 'blackjack';
       STATE.gameData = {
@@ -1741,7 +1744,7 @@
       if (hasFundsForExtra) {
         optionsList += ', <span class="text-yellow-300 font-bold">double</span> (doubler)';
         if (canSplit) {
-          optionsList += ', <span class="text-emerald-400 font-bold underline">split</span> (séparer les 2 mains)';
+          optionsList += ', <span class="text-emerald-400 font-bold underline">split</span> (séparer votre paire)';
         }
       } else {
         if (canSplit) {
@@ -1797,7 +1800,7 @@
           }
         } else if (cmd === 'split' || cmd === 'separer') {
           if (!g.canSplit) {
-            print(`Split impossible : Votre main de départ doit être une paire d'As ou deux cartes valant 10 (10, J, Q, K).`, 'error');
+            print(`Split impossible : Votre main de départ doit OBLIGATOIREMENT être une paire de deux cartes de même rang (ex: 2-2, 8-8, 10-10, J-J, Q-Q, K-K, A-A). Les cartes valant 10 dépareillées (ex: 10 et Roi, Dame et Valet) sont strictement interdites au split.`, 'error');
             return;
           }
           if (STATE.balance < g.bet) {
@@ -1823,7 +1826,7 @@
 
           printRaw(`
 <div class="my-2 p-2 border-2 border-emerald-500/70 bg-emerald-950/30 rounded space-y-1">
-  <div class="text-sm font-bold text-emerald-300">✂️ SPLIT ACTIVÉ ! Mains séparées en 2 avec ${g.bet.toLocaleString()} $ de mise chacune.</div>
+  <div class="text-sm font-bold text-emerald-300">✂️ SPLIT ACTIVÉ ! Paire séparée en 2 mains avec ${g.bet.toLocaleString()} $ de mise chacune.</div>
   <div class="text-xs">Main 1 : ${g.formatCards(g.splitHands[0])} (Total : <b class="text-yellow-300">${g.calcHand(g.splitHands[0])}</b>)</div>
   <div class="text-xs">Main 2 : ${g.formatCards(g.splitHands[1])} (Total : <b class="text-yellow-300">${g.calcHand(g.splitHands[1])}</b>)</div>
 </div>`);
