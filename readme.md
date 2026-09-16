@@ -1,82 +1,82 @@
 # VEGAS-OS // Terminal Casino 🎰
 
-**VEGAS-OS** est un simulateur de casino interactif et immersif entièrement développé en un seul fichier (Single-File App) avec **HTML5, Tailwind CSS et JavaScript pur**. Présenté sous la forme d'un terminal de commande rétro/cyberpunk (inspiré des environnements CRT), il intègre un système d'authentification des utilisateurs, plusieurs jeux de casino entièrement jouables, un système de séries de victoires dynamiques 🔥, une gestion VIP évolutive et des thèmes graphiques déblocables.
-
----
+**VEGAS-OS** est un simulateur de casino interactif et immersif entièrement développé en un seul fichier (**Single-File App**) avec **HTML5, Tailwind CSS et JavaScript pur**. Présenté sous la forme d'un terminal de commande rétro/cyberpunk (inspiré des environnements cathodiques CRT), il intègre un système complet d'authentification utilisateur, un catalogue varié de jeux de casino, un système de séries de victoires dynamiques 🔥, une gestion VIP évolutive, un moteur sonore Web Audio API synthétisé et des thèmes graphiques déblocables via une boutique intégrée.
 
 ## 🚀 Fonctionnalités principales
 
-- **Terminal Interactif Rétro (CRT) :**
-  - Effets visuels d'écran cathodique (lignes de balayage / scanlines, lueurs de phosphore).
-  - Navigation par commandes textuelles avec autocomplétion (`Tab`) et historique des commandes (`Flèche Haut/Bas`).
-  - Barre de raccourcis rapide personnalisable en bas d'écran.
-- **Catalogue de Jeux de Casino :**
-  - 🎰 **Slots (Machine à sous) :** Rouleaux virtuels pondérés, gains multipliés (jusqu'au Jackpot x77), remboursements sur cerises.
-  - ♠️ **Blackjack :** Table de 21 complète avec cartes dynamiques, options de tirage (*hit*), maintien (*stand*) et doublage (*double*).
-  - 🎡 **Roulette Européenne :** Cylindre de 37 cases (0 à 36), paris sur numéros pleins (x36), couleurs, parités, passes/manques ou douzaines.
-  - 🚀 **Crash (Fusée) :** Multiplicateur exponentiel en temps réel où le joueur doit s'éjecter avant l'explosion.
-  - 🎲 **Dés (2D6) :** Lancer de deux dés avec cotes dynamiques selon les conditions de somme (*sup* ou *inf*).
-- **Systèmes Avancés & Économie :**
-  - **Système de Séries 🔥 :** Enchaînez les victoires pour obtenir un bonus progressif de $+1\%$ par victoire consécutive.
-  - **Statistiques & Probabilités :** Suivi individuel des taux de victoires par jeu et commande dédiée (`proba`) pour consulter les cotes mathématiques exactes et les taux RTP.
-  - **Hiérarchie VIP :** Paliers dynamiques (Bronze, Argent, Or, Platinum, Diamant) selon votre capital.
-  - **Aide financière du Cartel :** Subvention quotidienne (`bonus`) et système d'emprunt (`emprunt` / `rembourser`).
-- **Boutique de Thèmes CRT & Personnalisation :**
-  - Changez d'ambiance visuelle à la volée (`Matrix`, `Vert CRT`, `Ambre`, `Cyberpunk`, `Crimson`).
-  - Sauvegarde automatique des profils et des préférences via le stockage local du navigateur (`localStorage`).
+* **Terminal Interactif Rétro (CRT) :**
+  * Effets visuels d'écran cathodique (lignes de balayage / *scanlines*, lueur de phosphore, courbure et vignette d'écran).
+  * Navigation fluide en ligne de commande avec auto-complétion contextuelle (`Tab`) et historique des commandes (`Flèche Haut / Bas`).
+  * Barre de raccourcis rapides cliquables et personnalisables en bas d'écran (ajout, retrait et réinitialisation).
+  * HUD supérieur en temps réel : utilisateur connecté, solde en banque, dette active, rang VIP et compteur de séries de victoires 🔥.
 
----
+* **Catalogue de Jeux de Casino :**
+  * 🎰 **Slots (Machine à sous) :** Rouleaux virtuels pondérés, remboursements sur cerises et gains multipliés jusqu'au Jackpot Suprême `[ 7 ] [ 7 ] [ 7 ]` ($\times 77$).
+  * ♠️ **Blackjack (Table 21) :** Table complète avec tirage dynamique de cartes, options de tirage (*hit*), maintien (*stand*), doublage de mise (*double*) et **Split de paire** (séparation stricte de deux cartes de même rang pour jouer deux mains distinctes).
+  * 🃏 **Ultimate Texas Hold'em (Poker) :** Affrontez la main du croupier en face-à-face avec mise initiale Ante + Blind, décisions d'enchère Play modulables (Play $\times 4$ préflop, Play $\times 2$ au flop, Play $\times 1$ à la river) et règle de qualification du croupier.
+  * 🎡 **Roulette Européenne :** Cylindre de 37 cases (0 à 36), paris sur numéros pleins ($\times 36$), chances simples (Rouge/Noir, Pair/Impair, Manque/Passe) et douzaines (d1, d2, d3).
+  * 🚀 **Crash (Fusée) :** Multiplicateur exponentiel en temps réel où le joueur doit s'éjecter à temps (`stop` / `cash`) avant l'explosion inopinée.
+  * 🎲 **Dés (2D6) :** Lancer de deux dés à 6 faces avec calcul dynamique des cotes mathématiques selon les conditions de somme choisies (`sup` ou `inf`).
+
+* **Systèmes Avancés & Économie :**
+  * **Système de Séries 🔥 :** Enchaînez les victoires consécutives pour bénéficier d'un bonus progressif de $+1\%$ par palier de victoire. Les égalités (*push*) préservent la série en cours.
+  * **Statistiques Détaillées & Probabilités :** Suivi individuel des taux de victoires par jeu (`stats`) et commande dédiée (`proba`) pour consulter les cotes exactes, la distribution des mains et les taux de retour (RTP).
+  * **Hiérarchie VIP Évolutive :** Paliers automatiques basés sur votre capital (Bronze, Argent, Or, Platinum et Diamant).
+  * **Aide Financière du Cartel :** Subvention périodique (`bonus`) ajustée à votre rang VIP (recharge toutes les 3 minutes) et système d'emprunt d'urgence (`emprunt` / `rembourser`, jusqu'à 5 000 \$ avec 30% d'intérêts).
+
+* **Audio & Personnalisation Graphique :**
+  * **Moteur Sonore Procédural (Web Audio API) :** Bruitages synthétiques rétro (frappe de touche, bips, lancers, gains, explosions) et musique d'ambiance cybernétique en boucle générée en direct, sans aucun fichier audio externe.
+  * **Boutique de Thèmes CRT :** Débloquez et équipez différentes ambiances visuelles (`Matrix`, `Vert CRT`, `Ambre`, `Cyberpunk`, `Crimson Cyber`, `Or Impérial`).
+  * **Persistance Locale :** Sauvegarde automatique des profils, mots de passe, soldes, statistiques et raccourcis via le stockage local (`localStorage`).
 
 ## 🛠️ Installation & Loi du Fichier Unique
 
-Le projet repose sur le principe du **Fichier Unique (Single-File Mandate)** : l'intégralité de l'application (structure, styles CSS, moteur audio Web Audio API et logique JavaScript) est contenue dans le fichier unique `VEGAS-OS.html`.
+Le projet applique rigoureusement le principe du **Fichier Unique (Single-File Mandate)** : l'intégralité du code (structure HTML5, styles Tailwind CSS et scanlines CRT, moteur sonore Web Audio API et moteur de jeu JavaScript) est contenue dans le fichier autonome `index.html` (ou `VEGAS-OS.html`).
 
 ### Pour lancer l'application localement :
-1. Téléchargez ou clonez le dépôt sur votre machine.
-2. Ouvrez simplement le fichier **`VEGAS-OS.html`** directement dans n'importe quel navigateur web moderne (Google Chrome, Firefox, Microsoft Edge, Safari). Aucun serveur web ni installation de dépendances n'est requis !
 
-```bash
-# Exemple de clonage du dépôt
-git clone https://gitlab.univ-nantes.fr/E253676K/test.git
-cd test
-```
+1. Téléchargez ou clonez le dépôt sur votre machine :
+   ```bash
+   git clone https://gitlab.univ-nantes.fr/E253676K/vegas-os.git
+   cd vegas-os
+   ```
 
----
+2. Ouvrez simplement le fichier **`index.html`** directement dans n'importe quel navigateur web moderne (*Google Chrome, Mozilla Firefox, Microsoft Edge, Safari, Brave*). Aucun serveur applicatif ni installation de dépendances (npm, python) n'est requis !
 
 ## 🎮 Commandes principales du Terminal
 
 Une fois connecté avec votre nom d'utilisateur, tapez directement vos commandes dans le terminal :
 
-| Commande | Description |
-| :--- | :--- |
-| `help` | Affiche le catalogue complet de toutes les commandes disponibles. |
-| `proba [jeu]` | Affiche les analyses mathématiques, cotes et taux de retour (RTP). |
-| `slots <mise\|all>` | Lance une partie sur la machine à sous (alias: `slot`). |
-| `blackjack <mise\|all>` | Ouvre la table de Blackjack interactive (alias: `bj`). |
-| `roulette <mise\|all> <pari>` | Lance une partie de roulette européenne (ex: `roulette 50 rouge`). |
-| `crash <mise\|all>` | Lance le mini-jeu de la fusée (utilisez `stop` pour encaisser). |
-| `dés <mise\|all> <sup\|inf> <n>`| Lance un pari sur la somme de 2 dés (ex: `dés 100 sup 7`). |
-| `profil` | Affiche votre dossier joueur, solde, dettes et records de séries. |
-| `vip` | Affiche les avantages et conditions de la hiérarchie VIP. |
-| `stats` | Affiche le taux de réussite individuel pour chaque jeu. |
-| `bonus` | Réclame l'aide financière du cartel (+250 $ toutes les 3 minutes). |
-| `emprunt <montant>` | Emprunte des jetons au cartel (jusqu'à 5 000 $, taux 30%). |
-| `rembourser [montant\|all]`| Rembourse tout ou partie de votre dette active. |
-| `theme [nom]` | Change le thème visuel (`matrix`, `amber`, `cyberpunk`, `crimson`, `default`). |
-| `settings` | Ouvre la fenêtre graphique de configuration, audio et thèmes. |
-| `logout` | Sauvegarde la session en cours et retourne à l'écran de login. |
-| `clear` | Nettoie l'affichage du terminal. |
-
----
+| Commande | Syntaxe / Exemple | Description |
+| :--- | :--- | :--- |
+| `help` | `help [jeu]` | Affiche le catalogue général ou les règles spécifiques d'un jeu. |
+| `proba` | `proba [jeu]` | Affiche les analyses mathématiques, cotes et taux de retour (RTP). |
+| `slots` | `slots <mise\|all>` | Lance la machine à sous virtuelle *(alias: `slot`)*. |
+| `blackjack` | `bj <mise\|all>` | Ouvre la table de Blackjack interactive 21 *(alias: `bj`)*. |
+| `poker` | `poker <mise\|all>` | Démarre une table d'Ultimate Texas Hold'em *(alias: `ultimate`, `uth`)*. |
+| `roulette` | `roulette <mise\|all> <pari>` | Lance une partie de roulette européenne (ex: `roulette 50 rouge`). |
+| `crash` | `crash <mise\|all>` | Lance le mini-jeu de la fusée (tapez `stop` ou `cash` pour vous éjecter). |
+| `dés` | `dés <mise\|all> <sup\|inf> <n>` | Parie sur la somme de 2D6 de 3 à 11 (ex: `dés 50 sup 7`). |
+| `profil` | `profil` | Affiche votre dossier joueur, solde, valeur nette, records et série $\🔥$. |
+| `vip` | `vip` | Affiche les avantages, subventions et conditions de la hiérarchie VIP. |
+| `stats` | `stats [jeu]` | Affiche les bilans complets et taux de réussite globaux ou par jeu. |
+| `bonus` | `bonus` | Réclame l'allocation financière du cartel selon votre palier VIP. |
+| `emprunt` | `emprunt <montant>` | Emprunte des jetons au cartel (plafond 5 000 \$, intérêt 30%). |
+| `rembourser` | `rembourser [montant\|all]` | Rembourse tout ou partie de votre dette active. |
+| `theme` | `theme [nom]` / `theme buy [nom]` | Change de palette d'affichage ou achète un nouveau thème CRT. |
+| `settings` | `settings` | Ouvre la fenêtre graphique de configuration sonore et raccourcis. |
+| `logout` | `logout` | Sauvegarde la session en cours et retourne à l'écran de connexion. |
+| `clear` | `clear` | Nettoie l'affichage du terminal *(alias: `cls`)*. |
 
 ## 🤝 Contribution
 
-Les contributions pour améliorer l'expérience de ce terminal de casino sont les bienvenues ! 
-1. Créez une branche pour votre fonctionnalité (`git checkout -b feature/nouvelle-fonction`).
+Les contributions pour enrichir l'expérience de ce casino rétro sont les bienvenues !
+
+1. Créez une branche pour votre fonctionnalité (`git checkout -b feature/nouvelle-table`).
 2. Validez vos changements (`git commit -m "feat: ajout d'un nouveau mini-jeu"`).
-3. Poussez votre branche sur le dépôt (`git push origin feature/nouvelle-fonction`).
+3. Poussez votre branche sur le dépôt distant (`git push origin feature/nouvelle-table`).
 4. Ouvrez une *Merge Request* sur GitLab.
 
 ## 📄 Licence
 
-Ce projet est distribué sous licence open-source. Consultez le code source pour plus de détails.
+Ce projet est distribué sous licence libre open-source. Consultez le code source pour plus de détails.
