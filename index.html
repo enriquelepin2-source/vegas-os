@@ -1277,7 +1277,7 @@
   <div><span class="font-bold text-cyan-300">profil / compte</span>        : Vue globale (solde, dettes, VIP, série 🔥 & statistiques)</div>
   <div><span class="font-bold text-cyan-300">vip / grades</span>           : Guide des paliers et avantages du statut VIP</div>
   <div><span class="font-bold text-cyan-300">solde / balance</span>        : Consulter vos jetons et dettes actuelles</div>
-  <div><span class="font-bold text-cyan-300">stats [poker]</span>           : Taux de victoires par jeu, détail UTH avec <span class="text-white">stats poker</span></div>
+  <div><span class="font-bold text-cyan-300">stats [jeu]</span>             : Vue complète par jeu (ex: <span class="text-white">stats bj</span>, <span class="text-white">stats roulette</span>, <span class="text-white">stats poker</span>)</div>
   <div><span class="font-bold text-cyan-300">bonus</span>                   : Réclamer l'aide cartel selon votre rang VIP (cooldown 3min)</div>
   <div><span class="font-bold text-cyan-300">emprunt &lt;montant&gt;</span>        : Emprunter au cartel (max 5000$, intérêt 30%)</div>
   <div><span class="font-bold text-cyan-300">rembourser [montant|all]</span> : Rembourser votre dette</div>
@@ -1509,6 +1509,33 @@
         printRaw(`<div class="my-1 p-2 sm:p-3 border border-yellow-500/60 bg-black/40 rounded-lg space-y-2 text-xs"><div class="font-bold text-yellow-300 text-sm border-b border-[var(--term-border)] pb-1">🃏 STATISTIQUES ULTIMATE POKER</div><div class="grid grid-cols-2 sm:grid-cols-3 gap-1"><div>Parties : <b class="text-white">${p.played}</b></div><div>Victoires : <b class="text-emerald-400">${p.won}</b></div><div>Défaites : <b class="text-red-400">${p.lost}</b></div><div>Égalités : <b class="text-cyan-300">${p.push || 0}</b></div><div>Winrate : <b class="text-yellow-300">${rate}%</b></div><div>Croupier qualifié : <b>${p.dealerQualified || 0} (${qualificationRate}%)</b></div></div><div class="border-t border-[var(--term-border)] pt-1 grid grid-cols-1 sm:grid-cols-2 gap-1"><div>Décisions Play — x4: <b>${p.play4x || 0}</b> | x2: <b>${p.play2x || 0}</b> | x1: <b>${p.play1x || 0}</b></div><div>Meilleure main gagnante : <b class="text-yellow-300">${p.bestHand || '—'}</b></div><div>Mises engagées : <b>${(p.totalCommitted || 0).toLocaleString()} $</b></div><div>Retours encaissés : <b class="text-emerald-400">${(p.totalReturned || 0).toLocaleString()} $</b></div><div>Bilan Poker : <b class="${net >= 0 ? 'text-emerald-400' : 'text-red-400'}">${net >= 0 ? '+' : ''}${net.toLocaleString()} $</b></div><div>Plus gros crédit : <b class="text-yellow-300">${(p.biggestPayout || 0).toLocaleString()} $</b></div></div></div>`);
         return;
       }
+      const gameAliases = {
+        slots: 'slots', slot: 'slots',
+        bj: 'bj', blackjack: 'bj',
+        roulette: 'roulette', roul: 'roulette',
+        crash: 'crash', fusee: 'crash',
+        dés: 'dés', des: 'dés', dé: 'dés', de: 'dés', dice: 'dés'
+      };
+      const gameKey = gameAliases[target.toLowerCase()];
+      if (gameKey) {
+        const s = STATE.stats.byGame[gameKey];
+        const label = {
+          slots: '🎰 SLOTS', bj: '♠️ BLACKJACK', roulette: '🎡 ROULETTE EUROPÉENNE', crash: '🚀 CRASH', dés: '🎲 DÉS 2D6'
+        }[gameKey];
+        const rate = s.played ? Math.round((s.won / s.played) * 100) : 0;
+        const pushed = s.push || 0;
+        const committed = s.totalCommitted || 0;
+        const returned = s.totalReturned || 0;
+        const net = returned - committed;
+        let extra = '';
+        if (gameKey === 'bj') extra = `<div>Blackjacks : <b>${s.blackjacks || 0}</b> | Busts : <b>${s.busts || 0}</b> | Doubles : <b>${s.doubles || 0}</b> | Splits : <b>${s.splits || 0}</b></div>`;
+        if (gameKey === 'crash') extra = `<div>Encaissements : <b>${s.cashouts || 0}</b> | Meilleur multiplicateur encaissé : <b class="text-yellow-300">${(s.highestMultiplier || 0).toFixed(2)}x</b></div>`;
+        if (gameKey === 'slots') extra = `<div>Rendement moyen par partie : <b>${s.played ? Math.round(returned / s.played).toLocaleString() : 0} $</b> | Meilleur gain : <b class="text-yellow-300">${(s.biggestPayout || 0).toLocaleString()} $</b></div>`;
+        if (gameKey === 'roulette') extra = `<div>Meilleur retour : <b class="text-yellow-300">${(s.biggestPayout || 0).toLocaleString()} $</b> | Mise maximale : <b>${(s.biggestStake || 0).toLocaleString()} $</b></div>`;
+        if (gameKey === 'dés') extra = `<div>Meilleur retour : <b class="text-yellow-300">${(s.biggestPayout || 0).toLocaleString()} $</b> | Mise maximale : <b>${(s.biggestStake || 0).toLocaleString()} $</b></div>`;
+        printRaw(`<div class="my-1 p-2 sm:p-3 border border-yellow-500/60 bg-black/40 rounded-lg space-y-2 text-xs"><div class="font-bold text-yellow-300 text-sm border-b border-[var(--term-border)] pb-1">STATISTIQUES — ${label}</div><div class="grid grid-cols-2 sm:grid-cols-3 gap-1"><div>Parties : <b class="text-white">${s.played}</b></div><div>Victoires : <b class="text-emerald-400">${s.won}</b></div><div>Défaites : <b class="text-red-400">${s.lost}</b></div><div>Égalités : <b class="text-cyan-300">${pushed}</b></div><div>Winrate : <b class="text-yellow-300">${rate}%</b></div><div>Mise moyenne : <b>${s.played ? Math.round(committed / s.played).toLocaleString() : 0} $</b></div></div><div class="border-t border-[var(--term-border)] pt-1 grid grid-cols-1 sm:grid-cols-2 gap-1"><div>Mises engagées : <b>${committed.toLocaleString()} $</b></div><div>Retours encaissés : <b class="text-emerald-400">${returned.toLocaleString()} $</b></div><div>Bilan du jeu : <b class="${net >= 0 ? 'text-emerald-400' : 'text-red-400'}">${net >= 0 ? '+' : ''}${net.toLocaleString()} $</b></div><div>Plus gros crédit : <b class="text-yellow-300">${(s.biggestPayout || 0).toLocaleString()} $</b></div>${extra}</div></div>`);
+        return;
+      }
       function calcRate(won, played) {
         if (!played || played === 0) return 0;
         return Math.round((won / played) * 100);
@@ -1627,6 +1654,18 @@
       return true;
     }
 
+    function recordGameStake(game, amount) {
+      const s = STATE.stats.byGame[game];
+      s.totalCommitted = (s.totalCommitted || 0) + amount;
+      s.biggestStake = Math.max(s.biggestStake || 0, amount);
+    }
+
+    function recordGameReturn(game, amount) {
+      const s = STATE.stats.byGame[game];
+      s.totalReturned = (s.totalReturned || 0) + amount;
+      s.biggestPayout = Math.max(s.biggestPayout || 0, amount);
+    }
+
     function playSlots(betInput) {
       const parsedBet = parseBet(betInput);
       if (!checkAndDeductBet(parsedBet, 'les Slots')) return;
@@ -1634,6 +1673,7 @@
       const bet = parsedBet.amount;
       STATE.stats.gamesPlayed++;
       STATE.stats.byGame.slots.played++;
+      recordGameStake('slots', bet);
       print(`Lancement des rouleaux mécaniques... Mise engagée : ${bet.toLocaleString()} $`);
 
       const symbols = [
@@ -1693,6 +1733,7 @@
 
           if (winAmount > 0) {
             STATE.stats.byGame.slots.won++;
+            recordGameReturn('slots', winAmount);
             const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(winAmount, 'slots');
             const streakTag = bonusMoney > 0
               ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
@@ -1719,6 +1760,7 @@
       const bet = parsedBet.amount;
       STATE.stats.gamesPlayed++;
       STATE.stats.byGame.bj.played++;
+      recordGameStake('bj', bet);
 
       const suits = ['♠', '♥', '♦', '♣'];
       const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
@@ -1847,6 +1889,8 @@
           }
           STATE.balance -= g.bet;
           STATE.stats.totalBets += g.bet;
+          recordGameStake('bj', g.bet);
+          STATE.stats.byGame.bj.doubles = (STATE.stats.byGame.bj.doubles || 0) + 1;
           g.bet *= 2;
           saveState();
 
@@ -1874,6 +1918,8 @@
           // Deduct second bet for the second hand
           STATE.balance -= g.bet;
           STATE.stats.totalBets += g.bet;
+          recordGameStake('bj', g.bet);
+          STATE.stats.byGame.bj.splits = (STATE.stats.byGame.bj.splits || 0) + 1;
           saveState();
 
           g.isSplit = true;
@@ -2003,6 +2049,7 @@
 
       const totalPayout = r1.payout + r2.payout;
       const totalBetsEngaged = g.bet * 2;
+      if (totalPayout) recordGameReturn('bj', totalPayout);
 
       // Single overall outcome for streak calculation
       if (winsCount > lossCount) {
@@ -2063,6 +2110,8 @@
       if (outcome === 'blackjack') {
         const baseWin = Math.floor(g.bet * 2.5);
         STATE.stats.byGame.bj.won++;
+        STATE.stats.byGame.bj.blackjacks = (STATE.stats.byGame.bj.blackjacks || 0) + 1;
+        recordGameReturn('bj', baseWin);
         const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWin, 'bj');
         const streakTag = bonusMoney > 0
           ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
@@ -2072,6 +2121,7 @@
       } else if (outcome === 'win' || outcome === 'dealer_bust') {
         const baseWin = g.bet * 2;
         STATE.stats.byGame.bj.won++;
+        recordGameReturn('bj', baseWin);
         const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWin, 'bj');
         const streakTag = bonusMoney > 0
           ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
@@ -2082,9 +2132,11 @@
       } else if (outcome === 'push') {
         STATE.balance += g.bet;
         STATE.stats.byGame.bj.push = (STATE.stats.byGame.bj.push || 0) + 1;
+        recordGameReturn('bj', g.bet);
         print(`🤝 ÉGALITÉ (Push). Votre mise de ${g.bet.toLocaleString()} $ vous est retournée. Série préservée (🔥 ${STATE.streak || 0}).`, 'warn');
       } else {
         STATE.stats.byGame.bj.lost++;
+        if (outcome === 'bust') STATE.stats.byGame.bj.busts = (STATE.stats.byGame.bj.busts || 0) + 1;
         applyLossStreak(g.bet, 'bj');
         const msg = outcome === 'bust' ? 'Vous avez dépassé 21 (Bust) !' : 'Le croupier a une meilleure main.';
         print(`💀 DÉFAITE. ${msg} (-${g.bet.toLocaleString()} $).`, 'dim');
@@ -2232,6 +2284,7 @@
       const bet = parsedBet.amount;
       STATE.stats.gamesPlayed++;
       STATE.stats.byGame.roulette.played++;
+      recordGameStake('roulette', bet);
       print(`La bille est lancée sur le cylindre... Mise: ${bet.toLocaleString()} $ sur [${betTarget.toUpperCase()}]`);
 
       const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
@@ -2284,6 +2337,7 @@
           if (winMultiplier > 0) {
             const baseWin = bet * winMultiplier;
             STATE.stats.byGame.roulette.won++;
+            recordGameReturn('roulette', baseWin);
             const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWin, 'roulette');
             const streakTag = bonusMoney > 0
               ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
@@ -2309,6 +2363,7 @@
       const bet = parsedBet.amount;
       STATE.stats.gamesPlayed++;
       STATE.stats.byGame.crash.played++;
+      recordGameStake('crash', bet);
 
       let crashPoint;
       const r = Math.random();
@@ -2376,6 +2431,9 @@
 
         const baseWon = Math.floor(g.bet * g.currentMultiplier);
         STATE.stats.byGame.crash.won++;
+        STATE.stats.byGame.crash.cashouts = (STATE.stats.byGame.crash.cashouts || 0) + 1;
+        STATE.stats.byGame.crash.highestMultiplier = Math.max(STATE.stats.byGame.crash.highestMultiplier || 0, g.currentMultiplier);
+        recordGameReturn('crash', baseWon);
         const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWon, 'crash');
         const streakTag = bonusMoney > 0
           ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
@@ -2417,6 +2475,7 @@
 
       STATE.stats.gamesPlayed++;
       STATE.stats.byGame.dés.played++;
+      recordGameStake('dés', bet);
 
       let ways = 0;
       for (let d1 = 1; d1 <= 6; d1++) {
@@ -2448,6 +2507,7 @@
       if (won) {
         const baseWin = Math.floor(bet * multiplier);
         STATE.stats.byGame.dés.won++;
+        recordGameReturn('dés', baseWin);
         const { bonusPct, bonusMoney, totalWin, consecutiveWins } = applyWinStreak(baseWin, 'dés');
         const streakTag = bonusMoney > 0
           ? ` <span class="text-orange-400 font-semibold">[🔥 Série ${bonusPct} : +${bonusMoney.toLocaleString()} $ (+${bonusPct}%)]</span>`
@@ -2755,7 +2815,7 @@
           'help', 'help slots', 'help blackjack', 'help bj', 'help poker', 'help roulette', 'help crash', 'help dés',
           'help profil', 'help vip', 'help solde', 'help stats', 'help proba', 'help bonus', 'help emprunt', 'help rembourser', 'help theme', 'help clear',
           'proba', 'proba slots', 'proba bj', 'proba poker', 'proba roulette', 'proba crash', 'proba dés',
-          'profil', 'vip', 'solde', 'stats', 'stats poker',
+          'profil', 'vip', 'solde', 'stats', 'stats slots', 'stats bj', 'stats poker', 'stats roulette', 'stats crash', 'stats dés',
           'bonus', 'emprunt', 'rembourser', 'theme', 'theme buy crimson', 'theme buy cyberpunk', 'theme buy amber', 'clear',
           'blackjack', 'bj', 'poker', 'ultimate', 'uth', 'slots', 'slot', 'roulette', 'roul', 'crash', 'fusee', 'dés', 'des', 'dé', 'de', 'dice',
           'slots all', 'bj all', 'crash all', 'roulette all rouge', 'roulette all noir', 'rembourser all', 'logout', 'deconnexion',
